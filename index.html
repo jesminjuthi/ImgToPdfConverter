@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
     <meta name="theme-color" content="#071426" />
-=======
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
     <title>Juthi's Advanced Image to PDF Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -39,8 +36,16 @@
         margin: 0;
         color: var(--ink);
         background:
-          radial-gradient(circle at 10% 5%, rgba(37, 99, 235, 0.28), transparent 34%),
-          radial-gradient(circle at 90% 0%, rgba(124, 58, 237, 0.25), transparent 35%),
+          radial-gradient(
+            circle at 10% 5%,
+            rgba(37, 99, 235, 0.28),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at 90% 0%,
+            rgba(124, 58, 237, 0.25),
+            transparent 35%
+          ),
           linear-gradient(145deg, #06101f 0%, #0b1f3a 50%, #111936 100%);
         background-attachment: fixed;
         overflow-x: hidden;
@@ -55,7 +60,11 @@
         opacity: 0.24;
         background-image:
           linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
         background-size: 42px 42px;
         mask-image: linear-gradient(to bottom, black, transparent 90%);
       }
@@ -161,7 +170,12 @@
 
       .gradient-title {
         color: #1e3a8a;
-        background: linear-gradient(90deg, #1d4ed8 0%, #5b21b6 55%, #0e7490 100%);
+        background: linear-gradient(
+          90deg,
+          #1d4ed8 0%,
+          #5b21b6 55%,
+          #0e7490 100%
+        );
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -195,8 +209,11 @@
         position: relative;
         overflow: hidden;
         color: var(--ink);
-        background:
-          linear-gradient(135deg, rgba(239, 246, 255, 0.98), rgba(245, 243, 255, 0.98));
+        background: linear-gradient(
+          135deg,
+          rgba(239, 246, 255, 0.98),
+          rgba(245, 243, 255, 0.98)
+        );
         border: 2px dashed #3b82f6;
         box-shadow:
           inset 0 0 0 1px rgba(255, 255, 255, 0.92),
@@ -313,7 +330,12 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4), transparent 70%);
+        background: linear-gradient(
+          115deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.4),
+          transparent 70%
+        );
         transform: translateX(-120%);
         transition: transform 500ms ease;
         pointer-events: none;
@@ -381,7 +403,12 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.56), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.56),
+          transparent
+        );
         transform: translateX(-100%);
         animation: progressShimmer 1.5s linear infinite;
       }
@@ -438,7 +465,11 @@
           linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
           linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
         background-size: 18px 18px;
-        background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+        background-position:
+          0 0,
+          0 9px,
+          9px -9px,
+          -9px 0;
       }
 
       .preview-image {
@@ -543,7 +574,6 @@
         cursor: grabbing !important;
       }
 
-<<<<<<< HEAD
       .fx-global {
         filter: var(--global-filter) !important;
       }
@@ -620,7 +650,10 @@
         font-size: 0.7rem;
         font-weight: 800;
         line-height: 1;
-        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease,
+          background 180ms ease;
       }
 
       .preview-toolbar-btn:hover,
@@ -656,7 +689,11 @@
           linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
           linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
         background-size: 22px 22px;
-        background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+        background-position:
+          0 0,
+          0 11px,
+          11px -11px,
+          -11px 0;
       }
 
       .modal-preview-image {
@@ -682,7 +719,10 @@
         padding: 0.7rem 0.95rem;
         font-size: 0.84rem;
         font-weight: 800;
-        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease,
+          background 180ms ease;
       }
 
       .modal-control-btn:hover,
@@ -727,7 +767,10 @@
         padding: 0.65rem 0.85rem;
         font-size: 0.8rem;
         font-weight: 800;
-        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease,
+          background 180ms ease;
       }
 
       .micro-control-btn:hover,
@@ -776,24 +819,41 @@
     <div class="ambient-orb orb-three" aria-hidden="true"></div>
 
     <main class="app-panel max-w-7xl mx-auto p-5 sm:p-7 md:p-9 rounded-2xl">
-      <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8 pt-2">
+      <header
+        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8 pt-2"
+      >
         <div class="flex items-center gap-4">
           <div class="brand-mark shrink-0" aria-hidden="true">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              class="w-7 h-7"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
           </div>
           <div>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+            <h1
+              class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900"
+            >
               Juthi's <span class="gradient-title">Image to PDF Converter</span>
             </h1>
             <p class="mt-1.5 text-sm sm:text-base font-medium text-slate-600">
-              Arrange, enhance and export your images with a clean, high-quality PDF workflow.
+              Arrange, enhance and export your images with a clean, high-quality
+              PDF workflow.
             </p>
           </div>
         </div>
 
-        <div class="status-pill inline-flex self-start lg:self-center items-center gap-2 rounded-full px-3.5 py-2 text-xs sm:text-sm font-bold whitespace-nowrap">
+        <div
+          class="status-pill inline-flex self-start lg:self-center items-center gap-2 rounded-full px-3.5 py-2 text-xs sm:text-sm font-bold whitespace-nowrap"
+        >
           <span class="status-dot" aria-hidden="true"></span>
           Local &amp; private processing
         </div>
@@ -807,29 +867,73 @@
         aria-label="Upload images by clicking or dragging files here"
       >
         <div class="drop-icon-wrap mx-auto">
-          <svg class="h-9 w-9" fill="none" stroke="currentColor" viewBox="0 0 48 48" aria-hidden="true">
-            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+          <svg
+            class="h-9 w-9"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <path
+              d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
-        <p class="relative z-10 mt-5 text-lg sm:text-xl font-extrabold text-slate-900">
+        <p
+          class="relative z-10 mt-5 text-lg sm:text-xl font-extrabold text-slate-900"
+        >
           Drop images here or click to upload
         </p>
         <p class="relative z-10 mt-2 text-sm font-medium text-slate-600">
           Supports JPG, PNG and WebP • Multiple files allowed
         </p>
-        <span class="relative z-10 inline-flex mt-5 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-lg">
+        <span
+          class="relative z-10 inline-flex mt-5 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-lg"
+        >
           Choose images
         </span>
-        <input type="file" id="file-input" class="hidden" multiple accept="image/jpeg, image/png, image/webp" />
+        <input
+          type="file"
+          id="file-input"
+          class="hidden"
+          multiple
+          accept="image/jpeg, image/png, image/webp"
+        />
       </section>
 
-      <section class="control-panel mt-6 p-4 sm:p-5 rounded-2xl hidden" id="controls" aria-label="PDF controls">
-        <div class="flex flex-col xl:flex-row justify-between xl:items-center gap-5">
-          <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto">
-            <div class="inline-flex items-center gap-2.5 rounded-xl bg-white border border-slate-300 px-3.5 py-2.5 shadow-sm">
-              <span class="inline-grid place-items-center w-8 h-8 rounded-lg bg-blue-100 text-blue-800" aria-hidden="true">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      <section
+        class="control-panel mt-6 p-4 sm:p-5 rounded-2xl hidden"
+        id="controls"
+        aria-label="PDF controls"
+      >
+        <div
+          class="flex flex-col xl:flex-row justify-between xl:items-center gap-5"
+        >
+          <div
+            class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto"
+          >
+            <div
+              class="inline-flex items-center gap-2.5 rounded-xl bg-white border border-slate-300 px-3.5 py-2.5 shadow-sm"
+            >
+              <span
+                class="inline-grid place-items-center w-8 h-8 rounded-lg bg-blue-100 text-blue-800"
+                aria-hidden="true"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
               </span>
               <p class="text-slate-800 font-extrabold whitespace-nowrap">
@@ -838,17 +942,33 @@
             </div>
 
             <div class="relative w-full sm:w-72">
-              <label for="global-fx-select" class="field-label text-xs font-bold absolute -top-2 left-2 px-1.5 z-10">
+              <label
+                for="global-fx-select"
+                class="field-label text-xs font-bold absolute -top-2 left-2 px-1.5 z-10"
+              >
                 Global Effect · Instant Preview
               </label>
-              <select id="global-fx-select" class="custom-select w-full p-3 rounded-xl text-sm font-semibold">
+              <select
+                id="global-fx-select"
+                class="custom-select w-full p-3 rounded-xl text-sm font-semibold"
+              >
                 <option value="original">Original · No Processing</option>
-                <option value="docs" selected>📖 Clean Scan · White Paper + Clear Text</option>
-                <option value="paper-bw">⬜ Pure Paper B&amp;W · Only White + Black</option>
-                <option value="enhance">🫧 Soft Scan · Natural and Clean</option>
-                <option value="enhance-pro">🔎 Sharp Scan · Strong Text Clarity</option>
+                <option value="docs" selected>
+                  📖 Clean Scan · White Paper + Clear Text
+                </option>
+                <option value="paper-bw">
+                  ⬜ Pure Paper B&amp;W · Only White + Black
+                </option>
+                <option value="enhance">
+                  🫧 Soft Scan · Natural and Clean
+                </option>
+                <option value="enhance-pro">
+                  🔎 Sharp Scan · Strong Text Clarity
+                </option>
                 <option value="image">🎨 Color Document · Clear Colors</option>
-                <option value="super">✏️ Faint Writing · Pencil Recovery</option>
+                <option value="super">
+                  ✏️ Faint Writing · Pencil Recovery
+                </option>
                 <option value="bw">⚪ Clear Grayscale</option>
                 <option value="bw-pro">⚫ High Contrast B&amp;W</option>
                 <option value="gray">🌫️ Gentle Grayscale</option>
@@ -858,135 +978,140 @@
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full xl:w-auto">
-            <button id="sort-btn" class="action-btn btn-neutral px-4 py-2.5 rounded-xl text-sm font-extrabold">
+            <button
+              id="sort-btn"
+              class="action-btn btn-neutral px-4 py-2.5 rounded-xl text-sm font-extrabold"
+            >
               Sort by Name
             </button>
-            <button id="clear-btn" class="action-btn btn-danger px-4 py-2.5 rounded-xl text-sm font-extrabold">
+            <button
+              id="clear-btn"
+              class="action-btn btn-danger px-4 py-2.5 rounded-xl text-sm font-extrabold"
+            >
               Clear All
             </button>
-            <button id="generate-btn" class="action-btn btn-primary px-5 py-2.5 rounded-xl text-sm font-extrabold">
+            <button
+              id="generate-btn"
+              class="action-btn btn-primary px-5 py-2.5 rounded-xl text-sm font-extrabold"
+            >
               Generate PDF
             </button>
-=======
-      .fx-global { filter: var(--global-filter) !important; }
-      .fx-original { filter: none; }
-
-      /* Updated Filters based on your images */
-      .fx-docs        { filter: grayscale(1) contrast(2.5) brightness(1.3); }
-      .fx-enhance     { filter: contrast(1.8) brightness(1.25) saturate(1.1); }
-      .fx-enhance-pro { filter: contrast(2.2) brightness(1.35) saturate(1.15); }
-      .fx-image       { filter: contrast(1.6) brightness(1.2) saturate(1.5); }
-      .fx-super       { filter: contrast(1.6) brightness(1.15) saturate(2.5); }
-      .fx-bw          { filter: grayscale(1) contrast(2) brightness(1.2); }
-      .fx-bw-pro      { filter: grayscale(1) contrast(3.5) brightness(1.25); }
-      .fx-gray        { filter: grayscale(1) contrast(1.8) brightness(1.2); }
-      .fx-invert      { filter: invert(100%) contrast(1.8) brightness(1.1); }
-
-      /* Transition for smooth rotation */
-      .rotate-transition {
-        transition: transform 0.3s ease-in-out;
-      }
-      
-      /* Hide scrollbar when modal is open */
-      body.modal-open {
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-50 min-h-screen p-3 md:p-8 relative">
-    <div class="max-w-7xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-xl">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">
-         Juthi's <span class="text-blue-600">Image to PDF Converter</span>
-        </h1>
-      </div>
-
-      <div
-        id="drop-zone"
-        class="border-4 border-dashed border-blue-300 rounded-xl p-8 text-center cursor-pointer hover:bg-blue-50 transition duration-300"
-      >
-        <svg class="mx-auto h-10 w-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p class="mt-3 text-base text-gray-600">Drag & drop images or click to upload</p>
-        <input type="file" id="file-input" class="hidden" multiple accept="image/jpeg, image/png, image/webp" />
-      </div>
-
-      <div class="mt-6 p-5 bg-gray-100 rounded-xl hidden" id="controls">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-            <p class="text-gray-700 font-medium whitespace-nowrap"><span id="file-count">0</span> Images</p>
-            <div class="relative w-full sm:w-60">
-              <label class="text-xs text-gray-500 absolute -top-2 left-2 bg-gray-100 px-1">Global Effect (Instant)</label>
-              <select id="global-fx-select" class="w-full p-2.5 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-200 outline-none">
-                <option value="original">Original (No Effect)</option>
-                <option value="docs">📖 Docs (Scan)</option>
-                <option value="enhance">✨ Enhance</option>
-                <option value="enhance-pro">🌟 Enhance Pro</option>
-                <option value="image">🖼️ Image (Vivid)</option>
-                <option value="super">🚀 Super Vivid</option>
-                <option value="bw">🏁 B&W (High Contrast)</option>
-                <option value="bw-pro">🏴 B&W Pro</option>
-                <option value="gray">🔘 Grayscale</option>
-                <option value="invert">🔄 Invert</option>
-              </select>
-            </div>
-          </div>
-          <div class="flex gap-3 w-full md:w-auto flex-wrap justify-center">
-            <button id="sort-btn" class="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition text-sm font-semibold">Sort by Name</button>
-            <button id="clear-btn" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition text-sm font-semibold">Clear All</button>
-            <button id="generate-btn" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg text-sm font-semibold">Generate PDF</button>
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
           </div>
         </div>
       </section>
 
-<<<<<<< HEAD
-      <section id="progress-container" class="progress-panel mt-6 p-4 sm:p-5 rounded-2xl hidden" aria-live="polite">
+      <section
+        id="progress-container"
+        class="progress-panel mt-6 p-4 sm:p-5 rounded-2xl hidden"
+        aria-live="polite"
+      >
         <div class="flex justify-between gap-3 mb-2">
           <span class="text-sm font-extrabold">Generating PDF...</span>
           <span class="text-sm font-black" id="progress-text">0%</span>
         </div>
         <div class="progress-track w-full rounded-full h-3.5 shadow-inner">
-          <div id="progress-bar" class="progress-fill h-3.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+          <div
+            id="progress-bar"
+            class="progress-fill h-3.5 rounded-full transition-all duration-300 ease-out"
+            style="width: 0%"
+          ></div>
         </div>
-        <p class="text-xs sm:text-sm font-medium text-slate-600 mt-2.5 text-center">
-          Removing page shadows, whitening the paper and sharpening the writing. Every scan mode is optimized for readable text.
+        <p
+          class="text-xs sm:text-sm font-medium text-slate-600 mt-2.5 text-center"
+        >
+          Removing page shadows, whitening the paper and sharpening the writing.
+          Every scan mode is optimized for readable text.
         </p>
       </section>
 
-      <section id="empty-state" class="empty-state mt-7 rounded-2xl p-5 text-center">
+      <section
+        id="empty-state"
+        class="empty-state mt-7 rounded-2xl p-5 text-center"
+      >
         <p class="font-bold">Your image previews will appear here.</p>
-        <p class="mt-1 text-sm text-slate-500">Drag cards to change page order after uploading.</p>
+        <p class="mt-1 text-sm text-slate-500">
+          Drag cards to change page order after uploading.
+        </p>
       </section>
 
-      <section id="image-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8" aria-label="Selected image previews"></section>
+      <section
+        id="image-preview"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8"
+        aria-label="Selected image previews"
+      ></section>
     </main>
 
-    <div id="preview-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
-      <div id="preview-modal-backdrop" class="preview-modal-backdrop absolute inset-0"></div>
-      <div class="relative z-10 min-h-screen flex items-center justify-center p-3 sm:p-6">
-        <section class="preview-modal-panel w-full max-w-6xl rounded-2xl overflow-hidden">
-          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-4 sm:p-5 border-b border-slate-200 bg-white">
+    <div
+      id="preview-modal"
+      class="fixed inset-0 z-50 hidden"
+      aria-hidden="true"
+    >
+      <div
+        id="preview-modal-backdrop"
+        class="preview-modal-backdrop absolute inset-0"
+      ></div>
+      <div
+        class="relative z-10 min-h-screen flex items-center justify-center p-3 sm:p-6"
+      >
+        <section
+          class="preview-modal-panel w-full max-w-6xl rounded-2xl overflow-hidden"
+        >
+          <div
+            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-4 sm:p-5 border-b border-slate-200 bg-white"
+          >
             <div class="min-w-0">
-              <p id="modal-file-name" class="text-base sm:text-lg font-black text-slate-900 truncate">Preview</p>
-              <div class="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm font-bold text-slate-600">
-                <span id="modal-effect-name" class="inline-flex items-center rounded-full px-3 py-1 bg-slate-100 border border-slate-200">Clean Scan</span>
-                <span id="modal-rotation-label" class="rotation-chip inline-flex items-center rounded-full px-3 py-1">Rotation: 0°</span>
-                <span id="modal-straighten-value" class="inline-flex items-center rounded-full px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200">Straighten: 0°</span>
+              <p
+                id="modal-file-name"
+                class="text-base sm:text-lg font-black text-slate-900 truncate"
+              >
+                Preview
+              </p>
+              <div
+                class="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm font-bold text-slate-600"
+              >
+                <span
+                  id="modal-effect-name"
+                  class="inline-flex items-center rounded-full px-3 py-1 bg-slate-100 border border-slate-200"
+                  >Clean Scan</span
+                >
+                <span
+                  id="modal-rotation-label"
+                  class="rotation-chip inline-flex items-center rounded-full px-3 py-1"
+                  >Rotation: 0°</span
+                >
+                <span
+                  id="modal-straighten-value"
+                  class="inline-flex items-center rounded-full px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200"
+                  >Straighten: 0°</span
+                >
               </div>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-              <button id="modal-rotate-left" type="button" class="modal-control-btn" aria-label="Rotate image left">
+              <button
+                id="modal-rotate-left"
+                type="button"
+                class="modal-control-btn"
+                aria-label="Rotate image left"
+              >
                 <span aria-hidden="true">↺</span>
                 Rotate Left
               </button>
-              <button id="modal-rotate-right" type="button" class="modal-control-btn" aria-label="Rotate image right">
+              <button
+                id="modal-rotate-right"
+                type="button"
+                class="modal-control-btn"
+                aria-label="Rotate image right"
+              >
                 <span aria-hidden="true">↻</span>
                 Rotate Right
               </button>
-              <button id="modal-close-btn" type="button" class="modal-control-btn modal-close-btn" aria-label="Close preview">
+              <button
+                id="modal-close-btn"
+                type="button"
+                class="modal-control-btn modal-close-btn"
+                aria-label="Close preview"
+              >
                 Close
               </button>
             </div>
@@ -996,11 +1121,30 @@
             <div class="grid gap-3 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
                 <div class="flex items-center justify-between gap-4 mb-2">
-                  <label for="modal-straighten-range" class="text-sm font-black text-slate-900">Straighten / Deskew</label>
-                  <span id="modal-straighten-live" class="text-sm font-extrabold text-blue-900">0°</span>
+                  <label
+                    for="modal-straighten-range"
+                    class="text-sm font-black text-slate-900"
+                    >Straighten / Deskew</label
+                  >
+                  <span
+                    id="modal-straighten-live"
+                    class="text-sm font-extrabold text-blue-900"
+                    >0°</span
+                  >
                 </div>
-                <input id="modal-straighten-range" class="straighten-range" type="range" min="-45" max="45" step="1" value="0" aria-label="Straighten image angle">
-                <div class="mt-1 flex justify-between text-[11px] font-bold text-slate-500">
+                <input
+                  id="modal-straighten-range"
+                  class="straighten-range"
+                  type="range"
+                  min="-45"
+                  max="45"
+                  step="1"
+                  value="0"
+                  aria-label="Straighten image angle"
+                />
+                <div
+                  class="mt-1 flex justify-between text-[11px] font-bold text-slate-500"
+                >
                   <span>-45°</span>
                   <span>0°</span>
                   <span>+45°</span>
@@ -1008,65 +1152,53 @@
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <button id="modal-straighten-left" type="button" class="micro-control-btn" aria-label="Rotate left by 1 degree">-1°</button>
-                <button id="modal-straighten-right" type="button" class="micro-control-btn" aria-label="Rotate right by 1 degree">+1°</button>
-                <button id="modal-reset-rotation" type="button" class="micro-control-btn" aria-label="Reset rotation">Reset</button>
+                <button
+                  id="modal-straighten-left"
+                  type="button"
+                  class="micro-control-btn"
+                  aria-label="Rotate left by 1 degree"
+                >
+                  -1°
+                </button>
+                <button
+                  id="modal-straighten-right"
+                  type="button"
+                  class="micro-control-btn"
+                  aria-label="Rotate right by 1 degree"
+                >
+                  +1°
+                </button>
+                <button
+                  id="modal-reset-rotation"
+                  type="button"
+                  class="micro-control-btn"
+                  aria-label="Reset rotation"
+                >
+                  Reset
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="modal-image-stage p-3 sm:p-5 md:p-6 flex items-center justify-center min-h-[55vh]">
-            <img id="modal-preview-image" class="modal-preview-image" alt="Large image preview">
+          <div
+            class="modal-image-stage p-3 sm:p-5 md:p-6 flex items-center justify-center min-h-[55vh]"
+          >
+            <img
+              id="modal-preview-image"
+              class="modal-preview-image"
+              alt="Large image preview"
+            />
           </div>
         </section>
       </div>
-=======
-      <div id="progress-container" class="mt-6 p-4 border border-blue-200 rounded-xl bg-blue-50 hidden">
-        <div class="flex justify-between mb-1.5">
-          <span class="text-sm font-semibold text-blue-800">Generating PDF...</span>
-          <span class="text-sm font-bold text-blue-800" id="progress-text">0%</span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-3.5 shadow-inner">
-          <div id="progress-bar" class="bg-blue-600 h-3.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
-        </div>
-        <p class="text-xs text-gray-600 mt-2 text-center">Applying effects and encoding pages. This may take time for large files.</p>
-      </div>
-
-      <div id="image-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8"></div>
     </div>
 
-    <div id="image-modal" class="fixed inset-0 z-50 bg-black bg-opacity-90 hidden flex flex-col justify-center items-center">
-        <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-red-500 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-2 transition z-50">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-
-        <div class="relative w-full max-w-4xl h-[70vh] flex justify-center items-center px-12">
-            <button onclick="navigateModal(-1)" class="absolute left-2 md:left-4 text-white hover:text-blue-400 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-3 transition z-50">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </button>
-            
-            <img id="modal-image" src="" class="max-h-full max-w-full object-contain rotate-transition shadow-2xl" alt="Large Preview">
-
-            <button onclick="navigateModal(1)" class="absolute right-2 md:right-4 text-white hover:text-blue-400 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-3 transition z-50">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </button>
-        </div>
-
-        <div class="absolute bottom-8 flex gap-4 bg-gray-900 bg-opacity-70 p-4 rounded-2xl z-50">
-            <button onclick="rotateModalImage(-90)" class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-blue-600 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                Rotate Left
-            </button>
-            <button onclick="rotateModalImage(90)" class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-blue-600 transition">
-                Rotate Right
-                <svg class="w-5 h-5 transform scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-            </button>
-        </div>
-        <div id="modal-filename" class="absolute bottom-2 text-gray-400 text-sm w-full text-center px-4 truncate"></div>
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
-    </div>
-
-    <div id="toast" class="toast rounded-xl px-4 py-3 text-sm font-bold" role="status" aria-live="polite"></div>
+    <div
+      id="toast"
+      class="toast rounded-xl px-4 py-3 text-sm font-bold"
+      role="status"
+      aria-live="polite"
+    ></div>
 
     <script>
       const fileInput = document.getElementById("file-input");
@@ -1084,19 +1216,35 @@
       const progressText = document.getElementById("progress-text");
       const toast = document.getElementById("toast");
       const previewModal = document.getElementById("preview-modal");
-      const previewModalBackdrop = document.getElementById("preview-modal-backdrop");
+      const previewModalBackdrop = document.getElementById(
+        "preview-modal-backdrop",
+      );
       const modalPreviewImage = document.getElementById("modal-preview-image");
       const modalFileName = document.getElementById("modal-file-name");
       const modalEffectName = document.getElementById("modal-effect-name");
-      const modalRotationLabel = document.getElementById("modal-rotation-label");
-      const modalStraightenValue = document.getElementById("modal-straighten-value");
-      const modalStraightenLive = document.getElementById("modal-straighten-live");
-      const modalStraightenRange = document.getElementById("modal-straighten-range");
+      const modalRotationLabel = document.getElementById(
+        "modal-rotation-label",
+      );
+      const modalStraightenValue = document.getElementById(
+        "modal-straighten-value",
+      );
+      const modalStraightenLive = document.getElementById(
+        "modal-straighten-live",
+      );
+      const modalStraightenRange = document.getElementById(
+        "modal-straighten-range",
+      );
       const modalRotateLeftBtn = document.getElementById("modal-rotate-left");
       const modalRotateRightBtn = document.getElementById("modal-rotate-right");
-      const modalStraightenLeftBtn = document.getElementById("modal-straighten-left");
-      const modalStraightenRightBtn = document.getElementById("modal-straighten-right");
-      const modalResetRotationBtn = document.getElementById("modal-reset-rotation");
+      const modalStraightenLeftBtn = document.getElementById(
+        "modal-straighten-left",
+      );
+      const modalStraightenRightBtn = document.getElementById(
+        "modal-straighten-right",
+      );
+      const modalResetRotationBtn = document.getElementById(
+        "modal-reset-rotation",
+      );
       const modalCloseBtn = document.getElementById("modal-close-btn");
 
       // Modal Elements
@@ -1105,7 +1253,6 @@
       const modalFilename = document.getElementById("modal-filename");
 
       let selectedFiles = [];
-<<<<<<< HEAD
       let currentGlobalEffect = "docs";
       let toastTimer;
       let dragDepth = 0;
@@ -1245,15 +1392,17 @@
       };
 
       const effectsMap = Object.fromEntries(
-        Object.entries(effectProfiles).map(([key, profile]) => [key, profile.css]),
+        Object.entries(effectProfiles).map(([key, profile]) => [
+          key,
+          profile.css,
+        ]),
       );
 
-      document.documentElement.style.setProperty("--global-filter", effectsMap[currentGlobalEffect]);
+      document.documentElement.style.setProperty(
+        "--global-filter",
+        effectsMap[currentGlobalEffect],
+      );
       globalFxSelect.value = currentGlobalEffect;
-=======
-      let currentGlobalEffect = "original";
-      let currentModalIndex = -1; // To track which image is open in modal
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
 
       dropZone.addEventListener("click", () => fileInput.click());
       dropZone.addEventListener("keydown", (event) => {
@@ -1262,7 +1411,6 @@
           fileInput.click();
         }
       });
-<<<<<<< HEAD
 
       dropZone.addEventListener("dragenter", (event) => {
         event.preventDefault();
@@ -1290,7 +1438,9 @@
         handleFiles(event.dataTransfer.files);
       });
 
-      fileInput.addEventListener("change", (event) => handleFiles(event.target.files));
+      fileInput.addEventListener("change", (event) =>
+        handleFiles(event.target.files),
+      );
 
       previewModalBackdrop.addEventListener("click", closePreviewModal);
       modalCloseBtn.addEventListener("click", closePreviewModal);
@@ -1311,21 +1461,21 @@
       });
       modalStraightenRange.addEventListener("input", (event) => {
         if (activePreviewId) {
-          setStraightenAngle(activePreviewId, Number(event.target.value), false);
+          setStraightenAngle(
+            activePreviewId,
+            Number(event.target.value),
+            false,
+          );
         }
       });
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !previewModal.classList.contains("hidden")) {
+        if (
+          event.key === "Escape" &&
+          !previewModal.classList.contains("hidden")
+        ) {
           closePreviewModal();
         }
-=======
-      dropZone.addEventListener("dragleave", () => dropZone.classList.remove("bg-blue-100"));
-      dropZone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropZone.classList.remove("bg-blue-100");
-        handleFiles(e.dataTransfer.files);
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
       });
 
       new Sortable(imagePreview, {
@@ -1340,7 +1490,6 @@
         },
       });
 
-<<<<<<< HEAD
       function createId() {
         if (window.crypto && typeof window.crypto.randomUUID === "function") {
           return window.crypto.randomUUID().replaceAll("-", "");
@@ -1362,7 +1511,10 @@
         toast.textContent = message;
         toast.className = `toast rounded-xl px-4 py-3 text-sm font-bold ${type}`;
         requestAnimationFrame(() => toast.classList.add("show"));
-        toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2800);
+        toastTimer = window.setTimeout(
+          () => toast.classList.remove("show"),
+          2800,
+        );
       }
 
       function normalizePositiveRotation(rotation) {
@@ -1380,7 +1532,9 @@
 
       function getEffectiveEffect(fileData) {
         if (!fileData) return currentGlobalEffect;
-        return fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+        return fileData.effect === "global"
+          ? currentGlobalEffect
+          : fileData.effect;
       }
 
       function getBaseRotation(fileData) {
@@ -1413,12 +1567,16 @@
         let processedData = previewCache.get(cacheKey);
 
         if (!processedData) {
-          processedData = await processImageWithEffect(fileData.url, effectKey, {
-            maxWidth,
-            maxHeight,
-            preview: options.preview ?? true,
-            rotation,
-          });
+          processedData = await processImageWithEffect(
+            fileData.url,
+            effectKey,
+            {
+              maxWidth,
+              maxHeight,
+              preview: options.preview ?? true,
+              rotation,
+            },
+          );
           previewCache.set(cacheKey, processedData);
         }
 
@@ -1427,37 +1585,23 @@
 
       function handleFiles(files) {
         const allFiles = Array.from(files || []);
-        const newFiles = allFiles.filter((file) => file.type.startsWith("image/"));
+        const newFiles = allFiles.filter((file) =>
+          file.type.startsWith("image/"),
+        );
         const rejectedCount = allFiles.length - newFiles.length;
-=======
-      const effectsMap = {
-  original:      "none",
-  docs:          "grayscale(1) contrast(2.5) brightness(1.3)",
-  enhance:       "contrast(1.8) brightness(1.25) saturate(1.1)",
-  "enhance-pro": "contrast(2.2) brightness(1.35) saturate(1.15)",
-  image:         "contrast(1.6) brightness(1.2) saturate(1.5)",
-  super:         "contrast(1.6) brightness(1.15) saturate(2.5)",
-  bw:            "grayscale(1) contrast(2) brightness(1.2)",
-  "bw-pro":      "grayscale(1) contrast(3.5) brightness(1.25)",
-  gray:          "grayscale(1) contrast(1.8) brightness(1.2)",
-  invert:        "invert(100%) contrast(1.8) brightness(1.1)",
-};
-
-      function handleFiles(files) {
-        const newFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
 
         newFiles.forEach((file) => {
           const id = createId();
           const url = URL.createObjectURL(file);
-<<<<<<< HEAD
-          selectedFiles.push({ id, file, url, effect: "global", baseRotation: 0, straightenAngle: 0 });
+          selectedFiles.push({
+            id,
+            file,
+            url,
+            effect: "global",
+            baseRotation: 0,
+            straightenAngle: 0,
+          });
           renderSingleImage(id, url, file.name, "global");
-=======
-          // Added rotation: 0 state
-          selectedFiles.push({ id, file, url, effect: "global", rotation: 0 });
-          renderSingleImage(id, url, file.name, 0);
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
         });
 
         updateUIContext();
@@ -1477,7 +1621,6 @@
         }
       }
 
-<<<<<<< HEAD
       globalFxSelect.addEventListener("change", (event) => {
         currentGlobalEffect = event.target.value;
         document.documentElement.style.setProperty(
@@ -1489,22 +1632,23 @@
           `${effectProfiles[currentGlobalEffect]?.label || "Effect"} applied. Preview and PDF will match.`,
           "success",
         );
-=======
-      globalFxSelect.addEventListener("change", (e) => {
-        currentGlobalEffect = e.target.value;
-        document.documentElement.style.setProperty("--global-filter", effectsMap[currentGlobalEffect]);
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
       });
 
       sortBtn.addEventListener("click", () => {
-        selectedFiles.sort((a, b) => a.file.name.localeCompare(b.file.name, undefined, { numeric: true, sensitivity: "base" }));
+        selectedFiles.sort((a, b) =>
+          a.file.name.localeCompare(b.file.name, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          }),
+        );
         reRenderAllPreviews();
         showToast("Images sorted by file name.", "success");
       });
 
       function handleIndividualFxChange(id, effectValue) {
-<<<<<<< HEAD
-        const fileIndex = selectedFiles.findIndex((fileData) => fileData.id === id);
+        const fileIndex = selectedFiles.findIndex(
+          (fileData) => fileData.id === id,
+        );
         if (fileIndex < 0) return;
 
         selectedFiles[fileIndex].effect = effectValue;
@@ -1523,18 +1667,25 @@
         const fileData = getFileDataById(id);
         const card = imagePreview.querySelector(`[data-id="${id}"]`);
         const img = card?.querySelector('img[data-type="preview"]');
-        const rotationBadge = card?.querySelector('[data-role="rotation-badge"]');
-        const straightenBadge = card?.querySelector('[data-role="straighten-badge"]');
+        const rotationBadge = card?.querySelector(
+          '[data-role="rotation-badge"]',
+        );
+        const straightenBadge = card?.querySelector(
+          '[data-role="straighten-badge"]',
+        );
         if (!fileData || !card || !img) return;
 
-        const effectiveFx = effectValue === "global" ? currentGlobalEffect : effectValue;
+        const effectiveFx =
+          effectValue === "global" ? currentGlobalEffect : effectValue;
         const profile = effectProfiles[effectiveFx] || effectProfiles.original;
         const requestId = String(++previewRequestCounter);
         img.dataset.previewRequest = requestId;
         img.src = fileData.url;
         img.className = "preview-image w-full h-full object-contain";
-        if (rotationBadge) rotationBadge.textContent = `${getDisplayRotation(fileData)}°`;
-        if (straightenBadge) straightenBadge.textContent = `${getStraightenAngle(fileData)}°`;
+        if (rotationBadge)
+          rotationBadge.textContent = `${getDisplayRotation(fileData)}°`;
+        if (straightenBadge)
+          straightenBadge.textContent = `${getStraightenAngle(fileData)}°`;
 
         card.classList.add("is-processing");
 
@@ -1558,35 +1709,23 @@
           if (img.dataset.previewRequest === requestId) {
             card.classList.remove("is-processing");
           }
-          if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+          if (
+            activePreviewId === id &&
+            !previewModal.classList.contains("hidden")
+          ) {
             updatePreviewModal();
-=======
-        const fileIndex = selectedFiles.findIndex((f) => f.id === id);
-        if (fileIndex > -1) {
-          selectedFiles[fileIndex].effect = effectValue;
-          const img = imagePreview.querySelector(`[data-id="${id}"] img[data-type="preview"]`);
-          
-          // Re-apply classes carefully to not remove rotation classes
-          let baseClasses = "w-full h-full object-cover rotate-transition";
-          if (effectValue === "global") {
-            img.className = baseClasses + " fx-global";
-          } else if (effectValue !== "original") {
-            img.className = baseClasses + ` fx-${effectValue}`;
-          } else {
-            img.className = baseClasses;
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
           }
         }
       }
 
-<<<<<<< HEAD
       function renderSingleImage(id, url, fileName, effectValue = "global") {
         const safeFileName = escapeHtml(fileName);
         const fileData = getFileDataById(id);
         const rotation = fileData ? getDisplayRotation(fileData) : 0;
         const straighten = fileData ? getStraightenAngle(fileData) : 0;
         const card = document.createElement("article");
-        card.className = "preview-card group rounded-xl overflow-hidden flex flex-col drag-handle cursor-move";
+        card.className =
+          "preview-card group rounded-xl overflow-hidden flex flex-col drag-handle cursor-move";
         card.dataset.id = id;
 
         card.innerHTML = `
@@ -1659,7 +1798,8 @@
         const effectiveFx = getEffectiveEffect(fileData);
         const straighten = getStraightenAngle(fileData);
         modalFileName.textContent = fileData.file.name;
-        modalEffectName.textContent = effectProfiles[effectiveFx]?.label || "Preview";
+        modalEffectName.textContent =
+          effectProfiles[effectiveFx]?.label || "Preview";
         modalRotationLabel.textContent = `Rotation: ${getDisplayRotation(fileData)}°`;
         modalStraightenValue.textContent = `Straighten: ${straighten > 0 ? `+${straighten}` : straighten}°`;
         modalStraightenLive.textContent = `${straighten > 0 ? `+${straighten}` : straighten}°`;
@@ -1701,16 +1841,24 @@
         const fileData = getFileDataById(id);
         if (!fileData) return;
 
-        fileData.baseRotation = normalizePositiveRotation((fileData.baseRotation || 0) + delta);
+        fileData.baseRotation = normalizePositiveRotation(
+          (fileData.baseRotation || 0) + delta,
+        );
         clearPreviewCacheForId(id);
         applyPreviewEffect(id, fileData.effect || "global");
 
-        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+        if (
+          activePreviewId === id &&
+          !previewModal.classList.contains("hidden")
+        ) {
           updatePreviewModal();
         }
 
         if (showMessage) {
-          showToast(`Image rotated to ${getDisplayRotation(fileData)}°.` , "success");
+          showToast(
+            `Image rotated to ${getDisplayRotation(fileData)}°.`,
+            "success",
+          );
         }
       }
 
@@ -1718,24 +1866,38 @@
         const fileData = getFileDataById(id);
         if (!fileData) return;
 
-        fileData.straightenAngle = clamp(Math.round(Number(angle) || 0), -45, 45);
+        fileData.straightenAngle = clamp(
+          Math.round(Number(angle) || 0),
+          -45,
+          45,
+        );
         clearPreviewCacheForId(id);
         applyPreviewEffect(id, fileData.effect || "global");
 
-        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+        if (
+          activePreviewId === id &&
+          !previewModal.classList.contains("hidden")
+        ) {
           updatePreviewModal();
         }
 
         if (showMessage) {
           const val = getStraightenAngle(fileData);
-          showToast(`Straighten angle set to ${val > 0 ? `+${val}` : val}°.` , "success");
+          showToast(
+            `Straighten angle set to ${val > 0 ? `+${val}` : val}°.`,
+            "success",
+          );
         }
       }
 
       function nudgeStraighten(id, delta, showMessage = true) {
         const fileData = getFileDataById(id);
         if (!fileData) return;
-        setStraightenAngle(id, getStraightenAngle(fileData) + delta, showMessage);
+        setStraightenAngle(
+          id,
+          getStraightenAngle(fileData) + delta,
+          showMessage,
+        );
       }
 
       function resetRotation(id, showMessage = true) {
@@ -1747,7 +1909,10 @@
         clearPreviewCacheForId(id);
         applyPreviewEffect(id, fileData.effect || "global");
 
-        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+        if (
+          activePreviewId === id &&
+          !previewModal.classList.contains("hidden")
+        ) {
           updatePreviewModal();
         }
 
@@ -1766,155 +1931,16 @@
       function syncArrayWithUI() {
         const currentUIElements = Array.from(imagePreview.children);
         selectedFiles = currentUIElements
-          .map((item) => selectedFiles.find((fileData) => fileData.id === item.dataset.id))
+          .map((item) =>
+            selectedFiles.find((fileData) => fileData.id === item.dataset.id),
+          )
           .filter(Boolean);
-=======
-      // Updated Render Function to include Rotate and View buttons
-      function renderSingleImage(id, url, fileName, rotation = 0) {
-        const div = document.createElement("div");
-        div.className = "relative group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition flex flex-col drag-handle cursor-move";
-        div.dataset.id = id;
-
-        // Apply scale slightly if rotated 90 or 270 so it fits in the square better visually
-        let scaleStr = (rotation % 180 !== 0) ? "scale(0.75)" : "scale(1)";
-
-        div.innerHTML = `
-            <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 flex items-center justify-center">
-                <img src="${url}" data-id="${id}" data-type="preview" 
-                     class="w-full h-full object-cover fx-global rotate-transition" 
-                     style="transform: rotate(${rotation}deg) ${scaleStr};" alt="preview">
-                
-                <div class="absolute top-1.5 left-1.5 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded shadow-md serial-number z-10"></div>
-                
-                <div class="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition z-20">
-                    <button onclick="event.stopPropagation(); rotatePreviewImage('${id}', 90)" class="bg-gray-800 bg-opacity-70 text-white rounded p-1.5 hover:bg-blue-600 transition" title="Rotate Right">
-                        <svg class="w-3.5 h-3.5 transform scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                    </button>
-                    <button onclick="event.stopPropagation(); removeImage('${id}')" class="bg-red-500 text-white rounded p-1.5 hover:bg-red-600 transition" title="Remove">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-
-                <div onclick="openModal('${id}')" class="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition cursor-pointer">
-                    <svg class="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                </div>
-            </div>
-            
-            <div class="p-2 flex-grow flex flex-col justify-between bg-white border-t border-gray-100">
-                <p class="text-gray-700 text-[11px] mb-2 truncate break-words leading-tight" title="${fileName}">${fileName}</p>
-                <select onchange="handleIndividualFxChange('${id}', this.value)" class="individual-fx-select w-full p-1 border border-gray-300 rounded text-[10px] bg-gray-50 focus:ring-1 focus:ring-blue-200 outline-none">
-                    <option value="global">Use Global FX</option>
-                    <option value="original">Original</option>
-                    <option value="docs">Docs</option>
-                    <option value="enhance">Enhance</option>
-                    <option value="enhance-pro">Enhance Pro</option>
-                    <option value="image">Image</option>
-                    <option value="super">Super</option>
-                    <option value="bw">B&W</option>
-                    <option value="bw-pro">B&W Pro</option>
-                    <option value="gray">Grayscale</option>
-                    <option value="invert">Invert</option>
-                </select>
-            </div>
-        `;
-        imagePreview.appendChild(div);
-      }
-
-      /* --- MODAL & ROTATION LOGIC START --- */
-
-      function openModal(id) {
-          syncArrayWithUI(); // Ensure array order matches UI before opening modal
-          currentModalIndex = selectedFiles.findIndex(f => f.id === id);
-          if (currentModalIndex === -1) return;
-          
-          updateModalContent();
-          imageModal.classList.remove("hidden");
-          document.body.classList.add("modal-open");
-      }
-
-      function closeModal() {
-          imageModal.classList.add("hidden");
-          document.body.classList.remove("modal-open");
-      }
-
-      function updateModalContent() {
-          const fileData = selectedFiles[currentModalIndex];
-          modalImage.src = fileData.url;
-          modalImage.style.transform = `rotate(${fileData.rotation}deg)`;
-          modalFilename.textContent = `${currentModalIndex + 1} of ${selectedFiles.length} — ${fileData.file.name}`;
-          
-          // Apply current filter to modal image to preview the effect
-          let effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
-          let filterString = effectsMap[effectiveFx] || "none";
-          modalImage.style.filter = filterString;
-      }
-
-      function navigateModal(direction) {
-          currentModalIndex += direction;
-          if (currentModalIndex < 0) currentModalIndex = selectedFiles.length - 1;
-          if (currentModalIndex >= selectedFiles.length) currentModalIndex = 0;
-          updateModalContent();
-      }
-
-      function rotateModalImage(deg) {
-          const fileData = selectedFiles[currentModalIndex];
-          fileData.rotation = (fileData.rotation + deg) % 360;
-          if(fileData.rotation < 0) fileData.rotation += 360; // Keep it positive
-          
-          // Update Modal UI
-          modalImage.style.transform = `rotate(${fileData.rotation}deg)`;
-          
-          // Update Preview UI instantly
-          updatePreviewRotationStyle(fileData.id, fileData.rotation);
-      }
-
-      function rotatePreviewImage(id, deg) {
-          const fileData = selectedFiles.find(f => f.id === id);
-          if(fileData) {
-              fileData.rotation = (fileData.rotation + deg) % 360;
-              if(fileData.rotation < 0) fileData.rotation += 360;
-              updatePreviewRotationStyle(id, fileData.rotation);
-          }
-      }
-
-      function updatePreviewRotationStyle(id, rotation) {
-          const img = imagePreview.querySelector(`[data-id="${id}"] img[data-type="preview"]`);
-          if(img) {
-              let scaleStr = (rotation % 180 !== 0) ? "scale(0.75)" : "scale(1)";
-              img.style.transform = `rotate(${rotation}deg) ${scaleStr}`;
-          }
-      }
-
-      // Keyboard support for Modal
-      document.addEventListener('keydown', (e) => {
-          if (!imageModal.classList.contains('hidden')) {
-              if (e.key === 'Escape') closeModal();
-              if (e.key === 'ArrowRight') navigateModal(1);
-              if (e.key === 'ArrowLeft') navigateModal(-1);
-          }
-      });
-
-      /* --- MODAL & ROTATION LOGIC END --- */
-
-      function syncArrayWithUI() {
-        const currentUIElements = Array.from(imagePreview.children);
-        selectedFiles = currentUIElements.map((item) => selectedFiles.find((f) => f.id === item.dataset.id));
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
       }
 
       function reRenderAllPreviews() {
         imagePreview.innerHTML = "";
         selectedFiles.forEach((item) => {
-<<<<<<< HEAD
           renderSingleImage(item.id, item.url, item.file.name, item.effect);
-=======
-          renderSingleImage(item.id, item.url, item.file.name, item.rotation);
-          if (item.effect !== "global") {
-            const select = imagePreview.querySelector(`[data-id="${item.id}"] .individual-fx-select`);
-            select.value = item.effect;
-            handleIndividualFxChange(item.id, item.effect);
-          }
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
         });
         updateUIHandles();
       }
@@ -1942,7 +1968,10 @@
         fileInput.value = "";
         globalFxSelect.value = "docs";
         currentGlobalEffect = "docs";
-        document.documentElement.style.setProperty("--global-filter", effectsMap.docs);
+        document.documentElement.style.setProperty(
+          "--global-filter",
+          effectsMap.docs,
+        );
         progressContainer.classList.add("hidden");
         updateUIContext();
         showToast("All images cleared.");
@@ -1957,9 +1986,11 @@
       }
 
       function updateUIHandles() {
-        imagePreview.querySelectorAll(".serial-number").forEach((item, index) => {
-          item.textContent = index + 1;
-        });
+        imagePreview
+          .querySelectorAll(".serial-number")
+          .forEach((item, index) => {
+            item.textContent = index + 1;
+          });
       }
 
       function setControlsDisabled(disabled) {
@@ -1982,44 +2013,52 @@
         progressBar.style.width = "0%";
         progressText.textContent = "0%";
         progressContainer.classList.remove("hidden");
-        progressContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        progressContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
 
         const { jsPDF } = window.jspdf;
-<<<<<<< HEAD
-=======
-        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", compress: true });
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
         const pageWidth = 210;
         const pageHeight = 297;
         const pageMargin = 5;
-        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", compress: true });
+        const pdf = new jsPDF({
+          orientation: "p",
+          unit: "mm",
+          format: "a4",
+          compress: true,
+        });
         let processedCount = 0;
 
         try {
           for (let i = 0; i < selectedFiles.length; i += 1) {
             const fileData = selectedFiles[i];
-            const effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+            const effectiveFx =
+              fileData.effect === "global"
+                ? currentGlobalEffect
+                : fileData.effect;
 
-<<<<<<< HEAD
             try {
-              const imgData = await processImageWithEffect(fileData.url, effectiveFx, {
-                rotation: getTotalRotation(fileData),
-              });
+              const imgData = await processImageWithEffect(
+                fileData.url,
+                effectiveFx,
+                {
+                  rotation: getTotalRotation(fileData),
+                },
+              );
               if (processedCount > 0) pdf.addPage();
-=======
-          let effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
-          let canvasFilterString = effectsMap[effectiveFx] || "none";
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
 
               const usableWidth = pageWidth - pageMargin * 2;
               const usableHeight = pageHeight - pageMargin * 2;
-              const ratio = Math.min(usableWidth / imgData.width, usableHeight / imgData.height);
+              const ratio = Math.min(
+                usableWidth / imgData.width,
+                usableHeight / imgData.height,
+              );
               const finalWidth = imgData.width * ratio;
               const finalHeight = imgData.height * ratio;
               const x = (pageWidth - finalWidth) / 2;
               const y = (pageHeight - finalHeight) / 2;
 
-<<<<<<< HEAD
               pdf.setFillColor(255, 255, 255);
               pdf.rect(0, 0, pageWidth, pageHeight, "F");
               pdf.addImage(
@@ -2041,24 +2080,6 @@
             progressBar.style.width = `${percent}%`;
             progressText.textContent = `${percent}%`;
             await new Promise((resolve) => setTimeout(resolve, 0));
-=======
-          try {
-            // Passing rotation data to canvas processor
-            const imgData = await processImageWithFilterAndRotation(fileData.url, canvasFilterString, fileData.rotation);
-
-            if (i > 0) pdf.addPage();
-
-            const ratio = Math.min(pageWidth / imgData.width, pageHeight / imgData.height);
-            const finalWidth = imgData.width * ratio;
-            const finalHeight = imgData.height * ratio;
-
-            const x = (pageWidth - finalWidth) / 2;
-            const y = (pageHeight - finalHeight) / 2;
-
-            pdf.addImage(imgData.dataUrl, "JPEG", x, y, finalWidth, finalHeight, undefined, "MEDIUM");
-          } catch (error) {
-            console.error(`Error processing image ${i}:`, error);
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
           }
 
           if (processedCount === 0) {
@@ -2081,9 +2102,11 @@
         } finally {
           setControlsDisabled(false);
           generateBtn.textContent = "Generate PDF";
-          window.setTimeout(() => progressContainer.classList.add("hidden"), 2800);
+          window.setTimeout(
+            () => progressContainer.classList.add("hidden"),
+            2800,
+          );
         }
-<<<<<<< HEAD
       });
 
       function clampByte(value) {
@@ -2202,8 +2225,15 @@
         const pixels = imageData.data;
         const pixelCount = width * height;
         const luminance = createLuminanceArray(pixels, pixelCount);
-        const { integral, stride } = createIntegralImage(luminance, width, height);
-        const radius = Math.max(12, Math.min(54, Math.round(Math.min(width, height) / 34)));
+        const { integral, stride } = createIntegralImage(
+          luminance,
+          width,
+          height,
+        );
+        const radius = Math.max(
+          12,
+          Math.min(54, Math.round(Math.min(width, height) / 34)),
+        );
 
         for (let y = 0; y < height; y += 1) {
           for (let x = 0; x < width; x += 1) {
@@ -2218,7 +2248,8 @@
             /* Local division removes uneven light, page shadows and grey/yellow paper. */
             const ratio = (originalLuma + 7) / (localPaper + 7);
             let correctedLuma =
-              profile.targetPaper * Math.pow(Math.max(0.015, ratio), profile.ratioGamma);
+              profile.targetPaper *
+              Math.pow(Math.max(0.015, ratio), profile.ratioGamma);
 
             if (profile.binary) {
               const value = correctedLuma < profile.binaryThreshold ? 0 : 255;
@@ -2230,8 +2261,13 @@
             }
 
             correctedLuma =
-              128 + (correctedLuma - 128) * profile.contrast + (profile.brightness || 0);
-            correctedLuma = pushPaperTowardWhite(correctedLuma, profile.whiteStart);
+              128 +
+              (correctedLuma - 128) * profile.contrast +
+              (profile.brightness || 0);
+            correctedLuma = pushPaperTowardWhite(
+              correctedLuma,
+              profile.whiteStart,
+            );
 
             if (correctedLuma < 128) {
               correctedLuma *= profile.blackStrength;
@@ -2246,9 +2282,12 @@
               const saturation = profile.saturation ?? 1;
               const safeLuma = Math.max(1, originalLuma);
               const scale = correctedLuma / safeLuma;
-              const red = originalLuma + (pixels[index] - originalLuma) * saturation;
-              const green = originalLuma + (pixels[index + 1] - originalLuma) * saturation;
-              const blue = originalLuma + (pixels[index + 2] - originalLuma) * saturation;
+              const red =
+                originalLuma + (pixels[index] - originalLuma) * saturation;
+              const green =
+                originalLuma + (pixels[index + 1] - originalLuma) * saturation;
+              const blue =
+                originalLuma + (pixels[index + 2] - originalLuma) * saturation;
 
               pixels[index] = clampByte(red * scale);
               pixels[index + 1] = clampByte(green * scale);
@@ -2269,25 +2308,6 @@
       }
 
       function processImageWithEffect(imageUrl, effectKey, options = {}) {
-=======
-
-        pdf.save(`Document_${new Date().toISOString().slice(0, 10)}_${Math.floor(Math.random() * 1000)}.pdf`);
-
-        generateBtn.disabled = false;
-        generateBtn.innerHTML = `Generate PDF`;
-        generateBtn.classList.remove("opacity-70", "cursor-not-allowed");
-        clearBtn.disabled = false;
-        sortBtn.disabled = false;
-        globalFxSelect.disabled = false;
-
-        progressBar.style.width = `100%`;
-        progressText.textContent = `Done!`;
-        setTimeout(() => progressContainer.classList.add("hidden"), 2500);
-      });
-
-      // Updated Function: Now handles both Filter and Real Canvas Rotation
-      function processImageWithFilterAndRotation(imageUrl, filterString, rotation = 0) {
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
         return new Promise((resolve, reject) => {
           const img = new Image();
 
@@ -2298,7 +2318,6 @@
                 willReadFrequently: effectKey !== "original",
               });
 
-<<<<<<< HEAD
               if (!ctx) {
                 reject(new Error("Canvas is not supported by this browser."));
                 return;
@@ -2316,8 +2335,14 @@
 
               const cos = Math.cos(radians);
               const sin = Math.sin(radians);
-              const rotatedWidth = Math.max(1, Math.ceil(Math.abs(width * cos) + Math.abs(height * sin)));
-              const rotatedHeight = Math.max(1, Math.ceil(Math.abs(width * sin) + Math.abs(height * cos)));
+              const rotatedWidth = Math.max(
+                1,
+                Math.ceil(Math.abs(width * cos) + Math.abs(height * sin)),
+              );
+              const rotatedHeight = Math.max(
+                1,
+                Math.ceil(Math.abs(width * sin) + Math.abs(height * cos)),
+              );
 
               canvas.width = rotatedWidth;
               canvas.height = rotatedHeight;
@@ -2331,24 +2356,12 @@
               ctx.restore();
 
               if (effectKey !== "original") {
-                applyReadabilityEffect(ctx, canvas.width, canvas.height, effectKey);
-=======
-            const MAX_WIDTH = 1280;
-            const MAX_HEIGHT = 1600;
-            let imgWidth = img.width;
-            let imgHeight = img.height;
-
-            // Maintain Aspect Ratio for Max Bounds
-            if (imgWidth > imgHeight) {
-              if (imgWidth > MAX_WIDTH) {
-                imgHeight *= MAX_WIDTH / imgWidth;
-                imgWidth = MAX_WIDTH;
-              }
-            } else {
-              if (imgHeight > MAX_HEIGHT) {
-                imgWidth *= MAX_HEIGHT / imgHeight;
-                imgHeight = MAX_HEIGHT;
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+                applyReadabilityEffect(
+                  ctx,
+                  canvas.width,
+                  canvas.height,
+                  effectKey,
+                );
               }
 
               const usePng = effectKey === "paper-bw";
@@ -2357,53 +2370,23 @@
                 ? canvas.toDataURL("image/png")
                 : canvas.toDataURL("image/jpeg", options.preview ? 0.86 : 0.92);
 
-              resolve({ dataUrl, width: canvas.width, height: canvas.height, format });
+              resolve({
+                dataUrl,
+                width: canvas.width,
+                height: canvas.height,
+                format,
+              });
               canvas.width = 0;
               canvas.height = 0;
             } catch (error) {
               reject(error);
             }
-<<<<<<< HEAD
-=======
-
-            // Adjust Canvas Size based on rotation
-            if (rotation === 90 || rotation === 270) {
-                canvas.width = imgHeight;
-                canvas.height = imgWidth;
-            } else {
-                canvas.width = imgWidth;
-                canvas.height = imgHeight;
-            }
-
-            ctx.save();
-            
-            // Translate to center to rotate around center
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate((rotation * Math.PI) / 180);
-
-            if (filterString && filterString !== "none") {
-              ctx.filter = filterString;
-            }
-
-            // Draw image offset by half width/height so it centers perfectly
-            ctx.drawImage(img, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
-            
-            ctx.restore();
-
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
-            // Return canvas width/height (which are already swapped if rotated)
-            resolve({ dataUrl, width: canvas.width, height: canvas.height });
-
-            canvas.width = 0;
-            canvas.height = 0;
->>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
           };
 
           img.onerror = () => reject(new Error("Image could not be loaded."));
           img.src = imageUrl;
         });
       }
-
     </script>
   </body>
 </html>
