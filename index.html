@@ -1,0 +1,2409 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
+    <meta name="theme-color" content="#071426" />
+=======
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+    <title>Juthi's Advanced Image to PDF Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <style>
+      :root {
+        --global-filter: grayscale(100%) contrast(1.72) brightness(1.18);
+        --ink: #0f172a;
+        --muted: #475569;
+        --line: #cbd5e1;
+        --surface: rgba(255, 255, 255, 0.96);
+        --surface-soft: #f8fafc;
+        --primary: #1d4ed8;
+        --primary-dark: #1e3a8a;
+        --accent: #7c3aed;
+        --success: #047857;
+        --danger: #b91c1c;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 5%, rgba(37, 99, 235, 0.28), transparent 34%),
+          radial-gradient(circle at 90% 0%, rgba(124, 58, 237, 0.25), transparent 35%),
+          linear-gradient(145deg, #06101f 0%, #0b1f3a 50%, #111936 100%);
+        background-attachment: fixed;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -3;
+        opacity: 0.24;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black, transparent 90%);
+      }
+
+      .ambient-orb {
+        position: fixed;
+        z-index: -2;
+        width: 28rem;
+        height: 28rem;
+        border-radius: 999px;
+        filter: blur(85px);
+        opacity: 0.34;
+        pointer-events: none;
+        animation: orbFloat 17s ease-in-out infinite alternate;
+      }
+
+      .orb-one {
+        top: -11rem;
+        left: -9rem;
+        background: #2563eb;
+      }
+
+      .orb-two {
+        top: 28%;
+        right: -13rem;
+        background: #7c3aed;
+        animation-delay: -5s;
+        animation-duration: 21s;
+      }
+
+      .orb-three {
+        bottom: -14rem;
+        left: 30%;
+        background: #0891b2;
+        animation-delay: -9s;
+        animation-duration: 24s;
+      }
+
+      @keyframes orbFloat {
+        from {
+          transform: translate3d(-2%, -2%, 0) scale(0.96);
+        }
+        to {
+          transform: translate3d(8%, 10%, 0) scale(1.08);
+        }
+      }
+
+      .app-panel {
+        position: relative;
+        isolation: isolate;
+        background: var(--surface);
+        border: 1px solid rgba(255, 255, 255, 0.76);
+        box-shadow:
+          0 34px 90px rgba(2, 6, 23, 0.42),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+      }
+
+      .app-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 7px;
+        border-radius: 1rem 1rem 0 0;
+        background: linear-gradient(90deg, #2563eb, #06b6d4, #7c3aed, #2563eb);
+        background-size: 250% 100%;
+        animation: accentFlow 7s linear infinite;
+        z-index: 2;
+      }
+
+      @keyframes accentFlow {
+        to {
+          background-position: 250% 0;
+        }
+      }
+
+      .brand-mark {
+        display: inline-grid;
+        place-items: center;
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 1rem;
+        color: #ffffff;
+        background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+        box-shadow:
+          0 13px 28px rgba(37, 99, 235, 0.32),
+          inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        animation: brandPulse 3.6s ease-in-out infinite;
+      }
+
+      @keyframes brandPulse {
+        0%,
+        100% {
+          transform: translateY(0);
+          box-shadow: 0 13px 28px rgba(37, 99, 235, 0.32);
+        }
+        50% {
+          transform: translateY(-3px);
+          box-shadow: 0 18px 35px rgba(124, 58, 237, 0.36);
+        }
+      }
+
+      .gradient-title {
+        color: #1e3a8a;
+        background: linear-gradient(90deg, #1d4ed8 0%, #5b21b6 55%, #0e7490 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .status-pill {
+        color: #065f46;
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+      }
+
+      .status-dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 999px;
+        background: #059669;
+        box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.45);
+        animation: statusPulse 2s infinite;
+      }
+
+      @keyframes statusPulse {
+        70% {
+          box-shadow: 0 0 0 8px rgba(5, 150, 105, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+        }
+      }
+
+      .drop-zone-enhanced {
+        position: relative;
+        overflow: hidden;
+        color: var(--ink);
+        background:
+          linear-gradient(135deg, rgba(239, 246, 255, 0.98), rgba(245, 243, 255, 0.98));
+        border: 2px dashed #3b82f6;
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.92),
+          0 14px 30px rgba(30, 64, 175, 0.1);
+        transition:
+          transform 220ms ease,
+          border-color 220ms ease,
+          box-shadow 220ms ease,
+          background 220ms ease;
+      }
+
+      .drop-zone-enhanced::after {
+        content: "";
+        position: absolute;
+        inset: -70% -30%;
+        background: linear-gradient(
+          105deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.82) 50%,
+          transparent 60%
+        );
+        transform: translateX(-55%) rotate(8deg);
+        animation: dropShine 7s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes dropShine {
+        0%,
+        55% {
+          transform: translateX(-58%) rotate(8deg);
+        }
+        82%,
+        100% {
+          transform: translateX(58%) rotate(8deg);
+        }
+      }
+
+      .drop-zone-enhanced:hover,
+      .drop-zone-enhanced:focus-visible,
+      .drop-zone-enhanced.is-dragging {
+        transform: translateY(-3px) scale(1.005);
+        border-color: #6d28d9;
+        background: linear-gradient(135deg, #dbeafe, #ede9fe);
+        box-shadow:
+          0 0 0 5px rgba(59, 130, 246, 0.16),
+          0 22px 46px rgba(30, 64, 175, 0.18);
+        outline: none;
+      }
+
+      .drop-icon-wrap {
+        position: relative;
+        z-index: 1;
+        display: inline-grid;
+        place-items: center;
+        width: 4.35rem;
+        height: 4.35rem;
+        border-radius: 1.35rem;
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.3);
+        transition: transform 240ms ease;
+      }
+
+      .drop-zone-enhanced:hover .drop-icon-wrap,
+      .drop-zone-enhanced.is-dragging .drop-icon-wrap {
+        transform: translateY(-4px) rotate(-3deg) scale(1.06);
+      }
+
+      .control-panel {
+        background: linear-gradient(145deg, #f8fafc, #eef2ff);
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+      }
+
+      .field-label {
+        color: #334155;
+        background: #f4f5fb;
+      }
+
+      .custom-select {
+        color: #0f172a;
+        background-color: #ffffff;
+        border: 1px solid #94a3b8;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        transition:
+          border-color 180ms ease,
+          box-shadow 180ms ease,
+          transform 180ms ease;
+      }
+
+      .custom-select:hover {
+        border-color: #2563eb;
+      }
+
+      .custom-select:focus-visible {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+        outline: none;
+      }
+
+      .action-btn {
+        position: relative;
+        overflow: hidden;
+        min-height: 2.65rem;
+        border: 1px solid transparent;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease,
+          filter 180ms ease;
+      }
+
+      .action-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4), transparent 70%);
+        transform: translateX(-120%);
+        transition: transform 500ms ease;
+        pointer-events: none;
+      }
+
+      .action-btn:hover::after {
+        transform: translateX(120%);
+      }
+
+      .action-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        filter: saturate(1.08);
+        box-shadow: 0 13px 28px rgba(15, 23, 42, 0.18);
+      }
+
+      .action-btn:active:not(:disabled) {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .action-btn:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.36);
+        outline-offset: 3px;
+      }
+
+      .btn-neutral {
+        color: #0f172a;
+        background: #ffffff;
+        border-color: #94a3b8;
+      }
+
+      .btn-danger {
+        color: #ffffff;
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        border-color: #7f1d1d;
+      }
+
+      .btn-primary {
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #5b21b6);
+        border-color: #1e40af;
+        box-shadow: 0 12px 26px rgba(37, 99, 235, 0.3);
+      }
+
+      .progress-panel {
+        color: #172554;
+        background: linear-gradient(135deg, #eff6ff, #eef2ff);
+        border: 1px solid #93c5fd;
+        box-shadow: 0 12px 28px rgba(30, 64, 175, 0.12);
+      }
+
+      .progress-track {
+        overflow: hidden;
+        background: #cbd5e1;
+      }
+
+      .progress-fill {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(90deg, #1d4ed8, #7c3aed, #0891b2);
+        background-size: 180% 100%;
+        animation: progressGradient 2.2s linear infinite;
+      }
+
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.56), transparent);
+        transform: translateX(-100%);
+        animation: progressShimmer 1.5s linear infinite;
+      }
+
+      @keyframes progressGradient {
+        to {
+          background-position: 180% 0;
+        }
+      }
+
+      @keyframes progressShimmer {
+        to {
+          transform: translateX(100%);
+        }
+      }
+
+      .preview-card {
+        position: relative;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 7px 19px rgba(15, 23, 42, 0.09);
+        transform: translateZ(0);
+        transition:
+          transform 220ms ease,
+          box-shadow 220ms ease,
+          border-color 220ms ease;
+      }
+
+      .preview-card::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: 0.75rem;
+        background: linear-gradient(135deg, #2563eb, #7c3aed, #0891b2);
+        opacity: 0;
+        transition: opacity 220ms ease;
+      }
+
+      .preview-card:hover {
+        transform: translateY(-7px) scale(1.015);
+        border-color: transparent;
+        box-shadow: 0 20px 38px rgba(30, 41, 59, 0.2);
+      }
+
+      .preview-card:hover::before {
+        opacity: 1;
+      }
+
+      .preview-image-wrap {
+        background:
+          linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+          linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+        background-size: 18px 18px;
+        background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+      }
+
+      .preview-image {
+        transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .preview-card:hover .preview-image {
+        transform: scale(1.055);
+      }
+
+      .serial-number {
+        color: #ffffff;
+        background: rgba(15, 23, 42, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.78);
+        box-shadow: 0 5px 14px rgba(2, 6, 23, 0.3);
+        backdrop-filter: blur(8px);
+      }
+
+      .remove-btn {
+        color: #ffffff;
+        background: rgba(185, 28, 28, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 6px 15px rgba(127, 29, 29, 0.28);
+        opacity: 0.92;
+        transform: scale(0.94);
+        transition:
+          opacity 180ms ease,
+          transform 180ms ease,
+          background 180ms ease;
+      }
+
+      .preview-card:hover .remove-btn,
+      .remove-btn:focus-visible {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .remove-btn:hover {
+        background: #991b1b;
+        transform: scale(1.08) rotate(4deg);
+      }
+
+      .remove-btn:focus-visible {
+        outline: 3px solid rgba(239, 68, 68, 0.38);
+        outline-offset: 2px;
+      }
+
+      .drag-cue {
+        color: #475569;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+      }
+
+      .filename {
+        color: #1e293b;
+      }
+
+      .empty-state {
+        color: #334155;
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid #dbe3ef;
+      }
+
+      .toast {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 50;
+        max-width: min(25rem, calc(100vw - 2rem));
+        color: #ffffff;
+        background: rgba(15, 23, 42, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 18px 46px rgba(2, 6, 23, 0.42);
+        backdrop-filter: blur(14px);
+        transform: translateY(1rem);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 220ms ease,
+          transform 220ms ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast.success {
+        background: rgba(4, 120, 87, 0.97);
+      }
+
+      .toast.error {
+        background: rgba(153, 27, 27, 0.97);
+      }
+
+      .sortable-ghost {
+        opacity: 0.34;
+        transform: scale(0.96);
+      }
+
+      .sortable-chosen {
+        cursor: grabbing !important;
+      }
+
+<<<<<<< HEAD
+      .fx-global {
+        filter: var(--global-filter) !important;
+      }
+
+      .fx-original {
+        filter: none;
+      }
+
+      .fx-docs {
+        filter: grayscale(100%) contrast(1.72) brightness(1.18);
+      }
+
+      /* Instant fallback while the true pixel-level white-paper preview is prepared. */
+      .fx-paper-bw {
+        filter: grayscale(100%) contrast(3.2) brightness(1.18);
+      }
+
+      .preview-card.is-processing .preview-image {
+        opacity: 0.68;
+        transform: scale(1.015);
+      }
+
+      .fx-enhance {
+        filter: grayscale(100%) contrast(1.42) brightness(1.13);
+      }
+
+      .fx-enhance-pro {
+        filter: grayscale(100%) contrast(2) brightness(1.16);
+      }
+
+      .fx-image {
+        filter: contrast(1.28) brightness(1.12) saturate(0.9);
+      }
+
+      .fx-super {
+        filter: grayscale(100%) contrast(1.82) brightness(1.12);
+      }
+
+      .fx-bw {
+        filter: grayscale(100%) contrast(1.62) brightness(1.1);
+      }
+
+      .fx-bw-pro {
+        filter: grayscale(100%) contrast(2.5) brightness(1.08);
+      }
+
+      .fx-gray {
+        filter: grayscale(100%) contrast(1.28) brightness(1.08);
+      }
+
+      .fx-invert {
+        filter: grayscale(100%) contrast(1.76) brightness(1.2);
+      }
+
+      .preview-image {
+        --image-rotation: 0deg;
+        transform: rotate(var(--image-rotation));
+      }
+
+      .preview-card:hover .preview-image {
+        transform: rotate(var(--image-rotation)) scale(1.055);
+      }
+
+      .preview-toolbar-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #0f172a;
+        border-radius: 0.7rem;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.7rem;
+        font-weight: 800;
+        line-height: 1;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .preview-toolbar-btn:hover,
+      .preview-toolbar-btn:focus-visible {
+        transform: translateY(-1px);
+        background: #eff6ff;
+        box-shadow: 0 8px 18px rgba(30, 64, 175, 0.12);
+        outline: none;
+      }
+
+      .rotation-chip {
+        color: #1e3a8a;
+        background: #dbeafe;
+        border: 1px solid #93c5fd;
+      }
+
+      .preview-modal-backdrop {
+        background: rgba(2, 6, 23, 0.68);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .preview-modal-panel {
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 28px 80px rgba(2, 6, 23, 0.45);
+      }
+
+      .modal-image-stage {
+        background:
+          linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+          linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+        background-size: 22px 22px;
+        background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+      }
+
+      .modal-preview-image {
+        max-width: 100%;
+        max-height: min(74vh, 980px);
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 0.9rem;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+        background: #ffffff;
+      }
+
+      .modal-control-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        border-radius: 0.9rem;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #0f172a;
+        padding: 0.7rem 0.95rem;
+        font-size: 0.84rem;
+        font-weight: 800;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .modal-control-btn:hover,
+      .modal-control-btn:focus-visible {
+        transform: translateY(-1px);
+        background: #eff6ff;
+        box-shadow: 0 10px 22px rgba(30, 64, 175, 0.12);
+        outline: none;
+      }
+
+      .modal-close-btn {
+        background: #0f172a;
+        color: #ffffff;
+        border-color: #0f172a;
+      }
+
+      .modal-close-btn:hover,
+      .modal-close-btn:focus-visible {
+        background: #1e293b;
+      }
+
+      .straighten-panel {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .straighten-range {
+        width: 100%;
+        accent-color: #2563eb;
+      }
+
+      .micro-control-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        border-radius: 0.8rem;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #0f172a;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.8rem;
+        font-weight: 800;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .micro-control-btn:hover,
+      .micro-control-btn:focus-visible {
+        transform: translateY(-1px);
+        background: #eff6ff;
+        box-shadow: 0 8px 18px rgba(30, 64, 175, 0.12);
+        outline: none;
+      }
+
+      @media (hover: none) {
+        .remove-btn {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .ambient-orb {
+          width: 18rem;
+          height: 18rem;
+          filter: blur(68px);
+        }
+
+        .app-panel {
+          border-radius: 1.15rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-3 md:p-8">
+    <div class="ambient-orb orb-one" aria-hidden="true"></div>
+    <div class="ambient-orb orb-two" aria-hidden="true"></div>
+    <div class="ambient-orb orb-three" aria-hidden="true"></div>
+
+    <main class="app-panel max-w-7xl mx-auto p-5 sm:p-7 md:p-9 rounded-2xl">
+      <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8 pt-2">
+        <div class="flex items-center gap-4">
+          <div class="brand-mark shrink-0" aria-hidden="true">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+              Juthi's <span class="gradient-title">Image to PDF Converter</span>
+            </h1>
+            <p class="mt-1.5 text-sm sm:text-base font-medium text-slate-600">
+              Arrange, enhance and export your images with a clean, high-quality PDF workflow.
+            </p>
+          </div>
+        </div>
+
+        <div class="status-pill inline-flex self-start lg:self-center items-center gap-2 rounded-full px-3.5 py-2 text-xs sm:text-sm font-bold whitespace-nowrap">
+          <span class="status-dot" aria-hidden="true"></span>
+          Local &amp; private processing
+        </div>
+      </header>
+
+      <section
+        id="drop-zone"
+        class="drop-zone-enhanced rounded-2xl p-8 sm:p-11 text-center cursor-pointer"
+        role="button"
+        tabindex="0"
+        aria-label="Upload images by clicking or dragging files here"
+      >
+        <div class="drop-icon-wrap mx-auto">
+          <svg class="h-9 w-9" fill="none" stroke="currentColor" viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="relative z-10 mt-5 text-lg sm:text-xl font-extrabold text-slate-900">
+          Drop images here or click to upload
+        </p>
+        <p class="relative z-10 mt-2 text-sm font-medium text-slate-600">
+          Supports JPG, PNG and WebP • Multiple files allowed
+        </p>
+        <span class="relative z-10 inline-flex mt-5 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-lg">
+          Choose images
+        </span>
+        <input type="file" id="file-input" class="hidden" multiple accept="image/jpeg, image/png, image/webp" />
+      </section>
+
+      <section class="control-panel mt-6 p-4 sm:p-5 rounded-2xl hidden" id="controls" aria-label="PDF controls">
+        <div class="flex flex-col xl:flex-row justify-between xl:items-center gap-5">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto">
+            <div class="inline-flex items-center gap-2.5 rounded-xl bg-white border border-slate-300 px-3.5 py-2.5 shadow-sm">
+              <span class="inline-grid place-items-center w-8 h-8 rounded-lg bg-blue-100 text-blue-800" aria-hidden="true">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <p class="text-slate-800 font-extrabold whitespace-nowrap">
+                <span id="file-count">0</span> Images
+              </p>
+            </div>
+
+            <div class="relative w-full sm:w-72">
+              <label for="global-fx-select" class="field-label text-xs font-bold absolute -top-2 left-2 px-1.5 z-10">
+                Global Effect · Instant Preview
+              </label>
+              <select id="global-fx-select" class="custom-select w-full p-3 rounded-xl text-sm font-semibold">
+                <option value="original">Original · No Processing</option>
+                <option value="docs" selected>📖 Clean Scan · White Paper + Clear Text</option>
+                <option value="paper-bw">⬜ Pure Paper B&amp;W · Only White + Black</option>
+                <option value="enhance">🫧 Soft Scan · Natural and Clean</option>
+                <option value="enhance-pro">🔎 Sharp Scan · Strong Text Clarity</option>
+                <option value="image">🎨 Color Document · Clear Colors</option>
+                <option value="super">✏️ Faint Writing · Pencil Recovery</option>
+                <option value="bw">⚪ Clear Grayscale</option>
+                <option value="bw-pro">⚫ High Contrast B&amp;W</option>
+                <option value="gray">🌫️ Gentle Grayscale</option>
+                <option value="invert">🌙 Dark Photo Fix</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full xl:w-auto">
+            <button id="sort-btn" class="action-btn btn-neutral px-4 py-2.5 rounded-xl text-sm font-extrabold">
+              Sort by Name
+            </button>
+            <button id="clear-btn" class="action-btn btn-danger px-4 py-2.5 rounded-xl text-sm font-extrabold">
+              Clear All
+            </button>
+            <button id="generate-btn" class="action-btn btn-primary px-5 py-2.5 rounded-xl text-sm font-extrabold">
+              Generate PDF
+            </button>
+=======
+      .fx-global { filter: var(--global-filter) !important; }
+      .fx-original { filter: none; }
+
+      /* Updated Filters based on your images */
+      .fx-docs        { filter: grayscale(1) contrast(2.5) brightness(1.3); }
+      .fx-enhance     { filter: contrast(1.8) brightness(1.25) saturate(1.1); }
+      .fx-enhance-pro { filter: contrast(2.2) brightness(1.35) saturate(1.15); }
+      .fx-image       { filter: contrast(1.6) brightness(1.2) saturate(1.5); }
+      .fx-super       { filter: contrast(1.6) brightness(1.15) saturate(2.5); }
+      .fx-bw          { filter: grayscale(1) contrast(2) brightness(1.2); }
+      .fx-bw-pro      { filter: grayscale(1) contrast(3.5) brightness(1.25); }
+      .fx-gray        { filter: grayscale(1) contrast(1.8) brightness(1.2); }
+      .fx-invert      { filter: invert(100%) contrast(1.8) brightness(1.1); }
+
+      /* Transition for smooth rotation */
+      .rotate-transition {
+        transition: transform 0.3s ease-in-out;
+      }
+      
+      /* Hide scrollbar when modal is open */
+      body.modal-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen p-3 md:p-8 relative">
+    <div class="max-w-7xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-xl">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">
+         Juthi's <span class="text-blue-600">Image to PDF Converter</span>
+        </h1>
+      </div>
+
+      <div
+        id="drop-zone"
+        class="border-4 border-dashed border-blue-300 rounded-xl p-8 text-center cursor-pointer hover:bg-blue-50 transition duration-300"
+      >
+        <svg class="mx-auto h-10 w-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="mt-3 text-base text-gray-600">Drag & drop images or click to upload</p>
+        <input type="file" id="file-input" class="hidden" multiple accept="image/jpeg, image/png, image/webp" />
+      </div>
+
+      <div class="mt-6 p-5 bg-gray-100 rounded-xl hidden" id="controls">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+            <p class="text-gray-700 font-medium whitespace-nowrap"><span id="file-count">0</span> Images</p>
+            <div class="relative w-full sm:w-60">
+              <label class="text-xs text-gray-500 absolute -top-2 left-2 bg-gray-100 px-1">Global Effect (Instant)</label>
+              <select id="global-fx-select" class="w-full p-2.5 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-200 outline-none">
+                <option value="original">Original (No Effect)</option>
+                <option value="docs">📖 Docs (Scan)</option>
+                <option value="enhance">✨ Enhance</option>
+                <option value="enhance-pro">🌟 Enhance Pro</option>
+                <option value="image">🖼️ Image (Vivid)</option>
+                <option value="super">🚀 Super Vivid</option>
+                <option value="bw">🏁 B&W (High Contrast)</option>
+                <option value="bw-pro">🏴 B&W Pro</option>
+                <option value="gray">🔘 Grayscale</option>
+                <option value="invert">🔄 Invert</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex gap-3 w-full md:w-auto flex-wrap justify-center">
+            <button id="sort-btn" class="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition text-sm font-semibold">Sort by Name</button>
+            <button id="clear-btn" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition text-sm font-semibold">Clear All</button>
+            <button id="generate-btn" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg text-sm font-semibold">Generate PDF</button>
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+          </div>
+        </div>
+      </section>
+
+<<<<<<< HEAD
+      <section id="progress-container" class="progress-panel mt-6 p-4 sm:p-5 rounded-2xl hidden" aria-live="polite">
+        <div class="flex justify-between gap-3 mb-2">
+          <span class="text-sm font-extrabold">Generating PDF...</span>
+          <span class="text-sm font-black" id="progress-text">0%</span>
+        </div>
+        <div class="progress-track w-full rounded-full h-3.5 shadow-inner">
+          <div id="progress-bar" class="progress-fill h-3.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+        </div>
+        <p class="text-xs sm:text-sm font-medium text-slate-600 mt-2.5 text-center">
+          Removing page shadows, whitening the paper and sharpening the writing. Every scan mode is optimized for readable text.
+        </p>
+      </section>
+
+      <section id="empty-state" class="empty-state mt-7 rounded-2xl p-5 text-center">
+        <p class="font-bold">Your image previews will appear here.</p>
+        <p class="mt-1 text-sm text-slate-500">Drag cards to change page order after uploading.</p>
+      </section>
+
+      <section id="image-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8" aria-label="Selected image previews"></section>
+    </main>
+
+    <div id="preview-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+      <div id="preview-modal-backdrop" class="preview-modal-backdrop absolute inset-0"></div>
+      <div class="relative z-10 min-h-screen flex items-center justify-center p-3 sm:p-6">
+        <section class="preview-modal-panel w-full max-w-6xl rounded-2xl overflow-hidden">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-4 sm:p-5 border-b border-slate-200 bg-white">
+            <div class="min-w-0">
+              <p id="modal-file-name" class="text-base sm:text-lg font-black text-slate-900 truncate">Preview</p>
+              <div class="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm font-bold text-slate-600">
+                <span id="modal-effect-name" class="inline-flex items-center rounded-full px-3 py-1 bg-slate-100 border border-slate-200">Clean Scan</span>
+                <span id="modal-rotation-label" class="rotation-chip inline-flex items-center rounded-full px-3 py-1">Rotation: 0°</span>
+                <span id="modal-straighten-value" class="inline-flex items-center rounded-full px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200">Straighten: 0°</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="modal-rotate-left" type="button" class="modal-control-btn" aria-label="Rotate image left">
+                <span aria-hidden="true">↺</span>
+                Rotate Left
+              </button>
+              <button id="modal-rotate-right" type="button" class="modal-control-btn" aria-label="Rotate image right">
+                <span aria-hidden="true">↻</span>
+                Rotate Right
+              </button>
+              <button id="modal-close-btn" type="button" class="modal-control-btn modal-close-btn" aria-label="Close preview">
+                Close
+              </button>
+            </div>
+          </div>
+
+          <div class="straighten-panel px-4 sm:px-5 py-4">
+            <div class="grid gap-3 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div>
+                <div class="flex items-center justify-between gap-4 mb-2">
+                  <label for="modal-straighten-range" class="text-sm font-black text-slate-900">Straighten / Deskew</label>
+                  <span id="modal-straighten-live" class="text-sm font-extrabold text-blue-900">0°</span>
+                </div>
+                <input id="modal-straighten-range" class="straighten-range" type="range" min="-45" max="45" step="1" value="0" aria-label="Straighten image angle">
+                <div class="mt-1 flex justify-between text-[11px] font-bold text-slate-500">
+                  <span>-45°</span>
+                  <span>0°</span>
+                  <span>+45°</span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="modal-straighten-left" type="button" class="micro-control-btn" aria-label="Rotate left by 1 degree">-1°</button>
+                <button id="modal-straighten-right" type="button" class="micro-control-btn" aria-label="Rotate right by 1 degree">+1°</button>
+                <button id="modal-reset-rotation" type="button" class="micro-control-btn" aria-label="Reset rotation">Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-image-stage p-3 sm:p-5 md:p-6 flex items-center justify-center min-h-[55vh]">
+            <img id="modal-preview-image" class="modal-preview-image" alt="Large image preview">
+          </div>
+        </section>
+      </div>
+=======
+      <div id="progress-container" class="mt-6 p-4 border border-blue-200 rounded-xl bg-blue-50 hidden">
+        <div class="flex justify-between mb-1.5">
+          <span class="text-sm font-semibold text-blue-800">Generating PDF...</span>
+          <span class="text-sm font-bold text-blue-800" id="progress-text">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3.5 shadow-inner">
+          <div id="progress-bar" class="bg-blue-600 h-3.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+        </div>
+        <p class="text-xs text-gray-600 mt-2 text-center">Applying effects and encoding pages. This may take time for large files.</p>
+      </div>
+
+      <div id="image-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8"></div>
+    </div>
+
+    <div id="image-modal" class="fixed inset-0 z-50 bg-black bg-opacity-90 hidden flex flex-col justify-center items-center">
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-red-500 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-2 transition z-50">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="relative w-full max-w-4xl h-[70vh] flex justify-center items-center px-12">
+            <button onclick="navigateModal(-1)" class="absolute left-2 md:left-4 text-white hover:text-blue-400 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-3 transition z-50">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            
+            <img id="modal-image" src="" class="max-h-full max-w-full object-contain rotate-transition shadow-2xl" alt="Large Preview">
+
+            <button onclick="navigateModal(1)" class="absolute right-2 md:right-4 text-white hover:text-blue-400 bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-full p-3 transition z-50">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+
+        <div class="absolute bottom-8 flex gap-4 bg-gray-900 bg-opacity-70 p-4 rounded-2xl z-50">
+            <button onclick="rotateModalImage(-90)" class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-blue-600 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                Rotate Left
+            </button>
+            <button onclick="rotateModalImage(90)" class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-blue-600 transition">
+                Rotate Right
+                <svg class="w-5 h-5 transform scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+            </button>
+        </div>
+        <div id="modal-filename" class="absolute bottom-2 text-gray-400 text-sm w-full text-center px-4 truncate"></div>
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+    </div>
+
+    <div id="toast" class="toast rounded-xl px-4 py-3 text-sm font-bold" role="status" aria-live="polite"></div>
+
+    <script>
+      const fileInput = document.getElementById("file-input");
+      const dropZone = document.getElementById("drop-zone");
+      const imagePreview = document.getElementById("image-preview");
+      const controls = document.getElementById("controls");
+      const emptyState = document.getElementById("empty-state");
+      const fileCountText = document.getElementById("file-count");
+      const globalFxSelect = document.getElementById("global-fx-select");
+      const sortBtn = document.getElementById("sort-btn");
+      const generateBtn = document.getElementById("generate-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const progressContainer = document.getElementById("progress-container");
+      const progressBar = document.getElementById("progress-bar");
+      const progressText = document.getElementById("progress-text");
+      const toast = document.getElementById("toast");
+      const previewModal = document.getElementById("preview-modal");
+      const previewModalBackdrop = document.getElementById("preview-modal-backdrop");
+      const modalPreviewImage = document.getElementById("modal-preview-image");
+      const modalFileName = document.getElementById("modal-file-name");
+      const modalEffectName = document.getElementById("modal-effect-name");
+      const modalRotationLabel = document.getElementById("modal-rotation-label");
+      const modalStraightenValue = document.getElementById("modal-straighten-value");
+      const modalStraightenLive = document.getElementById("modal-straighten-live");
+      const modalStraightenRange = document.getElementById("modal-straighten-range");
+      const modalRotateLeftBtn = document.getElementById("modal-rotate-left");
+      const modalRotateRightBtn = document.getElementById("modal-rotate-right");
+      const modalStraightenLeftBtn = document.getElementById("modal-straighten-left");
+      const modalStraightenRightBtn = document.getElementById("modal-straighten-right");
+      const modalResetRotationBtn = document.getElementById("modal-reset-rotation");
+      const modalCloseBtn = document.getElementById("modal-close-btn");
+
+      // Modal Elements
+      const imageModal = document.getElementById("image-modal");
+      const modalImage = document.getElementById("modal-image");
+      const modalFilename = document.getElementById("modal-filename");
+
+      let selectedFiles = [];
+<<<<<<< HEAD
+      let currentGlobalEffect = "docs";
+      let toastTimer;
+      let dragDepth = 0;
+      let previewRequestCounter = 0;
+      const previewCache = new Map();
+      let activePreviewId = null;
+
+      /*
+        Every mode below is document-readability aware. The CSS filter is only a quick
+        temporary preview. The final preview and PDF use the pixel-level profiles.
+      */
+      const effectProfiles = {
+        original: {
+          css: "none",
+          raster: false,
+          label: "Original",
+        },
+        docs: {
+          css: "grayscale(100%) contrast(1.72) brightness(1.18)",
+          label: "Clean Scan",
+          grayscale: true,
+          targetPaper: 250,
+          ratioGamma: 1.52,
+          contrast: 1.32,
+          brightness: 2,
+          whiteStart: 216,
+          blackStrength: 0.88,
+          sharpen: 0.12,
+        },
+        "paper-bw": {
+          css: "grayscale(100%) contrast(3.3) brightness(1.2)",
+          label: "Pure Paper B&W",
+          grayscale: true,
+          binary: true,
+          targetPaper: 252,
+          ratioGamma: 1.72,
+          binaryThreshold: 211,
+          despeckle: true,
+        },
+        enhance: {
+          css: "grayscale(100%) contrast(1.42) brightness(1.13)",
+          label: "Soft Scan",
+          grayscale: true,
+          targetPaper: 247,
+          ratioGamma: 1.28,
+          contrast: 1.18,
+          brightness: 2,
+          whiteStart: 226,
+          blackStrength: 0.95,
+          sharpen: 0.08,
+        },
+        "enhance-pro": {
+          css: "grayscale(100%) contrast(2) brightness(1.16)",
+          label: "Sharp Scan",
+          grayscale: true,
+          targetPaper: 252,
+          ratioGamma: 1.68,
+          contrast: 1.48,
+          brightness: 1,
+          whiteStart: 208,
+          blackStrength: 0.78,
+          sharpen: 0.18,
+        },
+        image: {
+          css: "contrast(1.28) brightness(1.12) saturate(0.9)",
+          label: "Color Document",
+          grayscale: false,
+          saturation: 0.9,
+          targetPaper: 247,
+          ratioGamma: 1.2,
+          contrast: 1.16,
+          brightness: 1,
+          whiteStart: 231,
+          blackStrength: 0.95,
+          sharpen: 0.08,
+        },
+        super: {
+          css: "grayscale(100%) contrast(1.82) brightness(1.12)",
+          label: "Faint Writing",
+          grayscale: true,
+          targetPaper: 249,
+          ratioGamma: 2.05,
+          contrast: 1.12,
+          brightness: 0,
+          whiteStart: 226,
+          blackStrength: 0.72,
+          sharpen: 0.14,
+        },
+        bw: {
+          css: "grayscale(100%) contrast(1.62) brightness(1.1)",
+          label: "Clear Grayscale",
+          grayscale: true,
+          targetPaper: 246,
+          ratioGamma: 1.38,
+          contrast: 1.28,
+          brightness: 0,
+          whiteStart: 225,
+          blackStrength: 0.88,
+          sharpen: 0.1,
+        },
+        "bw-pro": {
+          css: "grayscale(100%) contrast(2.5) brightness(1.08)",
+          label: "High Contrast B&W",
+          grayscale: true,
+          targetPaper: 251,
+          ratioGamma: 1.82,
+          contrast: 1.62,
+          brightness: -1,
+          whiteStart: 205,
+          blackStrength: 0.67,
+          sharpen: 0.16,
+        },
+        gray: {
+          css: "grayscale(100%) contrast(1.28) brightness(1.08)",
+          label: "Gentle Grayscale",
+          grayscale: true,
+          targetPaper: 242,
+          ratioGamma: 1.15,
+          contrast: 1.08,
+          brightness: 1,
+          whiteStart: 236,
+          blackStrength: 0.98,
+          sharpen: 0.04,
+        },
+        invert: {
+          css: "grayscale(100%) contrast(1.76) brightness(1.2)",
+          label: "Dark Photo Fix",
+          grayscale: true,
+          targetPaper: 253,
+          ratioGamma: 1.58,
+          contrast: 1.38,
+          brightness: 4,
+          whiteStart: 213,
+          blackStrength: 0.8,
+          sharpen: 0.13,
+        },
+      };
+
+      const effectsMap = Object.fromEntries(
+        Object.entries(effectProfiles).map(([key, profile]) => [key, profile.css]),
+      );
+
+      document.documentElement.style.setProperty("--global-filter", effectsMap[currentGlobalEffect]);
+      globalFxSelect.value = currentGlobalEffect;
+=======
+      let currentGlobalEffect = "original";
+      let currentModalIndex = -1; // To track which image is open in modal
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+
+      dropZone.addEventListener("click", () => fileInput.click());
+      dropZone.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          fileInput.click();
+        }
+      });
+<<<<<<< HEAD
+
+      dropZone.addEventListener("dragenter", (event) => {
+        event.preventDefault();
+        dragDepth += 1;
+        dropZone.classList.add("is-dragging");
+      });
+
+      dropZone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dragDepth -= 1;
+        if (dragDepth <= 0) {
+          dragDepth = 0;
+          dropZone.classList.remove("is-dragging");
+        }
+      });
+
+      dropZone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dragDepth = 0;
+        dropZone.classList.remove("is-dragging");
+        handleFiles(event.dataTransfer.files);
+      });
+
+      fileInput.addEventListener("change", (event) => handleFiles(event.target.files));
+
+      previewModalBackdrop.addEventListener("click", closePreviewModal);
+      modalCloseBtn.addEventListener("click", closePreviewModal);
+      modalRotateLeftBtn.addEventListener("click", () => {
+        if (activePreviewId) rotateImage(activePreviewId, -90, false);
+      });
+      modalRotateRightBtn.addEventListener("click", () => {
+        if (activePreviewId) rotateImage(activePreviewId, 90, false);
+      });
+      modalStraightenLeftBtn.addEventListener("click", () => {
+        if (activePreviewId) nudgeStraighten(activePreviewId, -1, false);
+      });
+      modalStraightenRightBtn.addEventListener("click", () => {
+        if (activePreviewId) nudgeStraighten(activePreviewId, 1, false);
+      });
+      modalResetRotationBtn.addEventListener("click", () => {
+        if (activePreviewId) resetRotation(activePreviewId, false);
+      });
+      modalStraightenRange.addEventListener("input", (event) => {
+        if (activePreviewId) {
+          setStraightenAngle(activePreviewId, Number(event.target.value), false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !previewModal.classList.contains("hidden")) {
+          closePreviewModal();
+        }
+=======
+      dropZone.addEventListener("dragleave", () => dropZone.classList.remove("bg-blue-100"));
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("bg-blue-100");
+        handleFiles(e.dataTransfer.files);
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+      });
+
+      new Sortable(imagePreview, {
+        animation: 210,
+        ghostClass: "sortable-ghost",
+        chosenClass: "sortable-chosen",
+        handle: ".drag-handle",
+        onEnd: () => {
+          syncArrayWithUI();
+          updateUIHandles();
+          showToast("Page order updated.", "success");
+        },
+      });
+
+<<<<<<< HEAD
+      function createId() {
+        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+          return window.crypto.randomUUID().replaceAll("-", "");
+        }
+        return `${Date.now()}${Math.random().toString(36).slice(2)}`;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function showToast(message, type = "default") {
+        window.clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.className = `toast rounded-xl px-4 py-3 text-sm font-bold ${type}`;
+        requestAnimationFrame(() => toast.classList.add("show"));
+        toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2800);
+      }
+
+      function normalizePositiveRotation(rotation) {
+        const normalized = rotation % 360;
+        return normalized < 0 ? normalized + 360 : normalized;
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function getFileDataById(id) {
+        return selectedFiles.find((item) => item.id === id);
+      }
+
+      function getEffectiveEffect(fileData) {
+        if (!fileData) return currentGlobalEffect;
+        return fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+      }
+
+      function getBaseRotation(fileData) {
+        return normalizePositiveRotation(fileData?.baseRotation || 0);
+      }
+
+      function getStraightenAngle(fileData) {
+        return clamp(Number(fileData?.straightenAngle || 0), -45, 45);
+      }
+
+      function getTotalRotation(fileData) {
+        return getBaseRotation(fileData) + getStraightenAngle(fileData);
+      }
+
+      function getDisplayRotation(fileData) {
+        return normalizePositiveRotation(getTotalRotation(fileData));
+      }
+
+      function clearPreviewCacheForId(id) {
+        for (const cacheKey of previewCache.keys()) {
+          if (cacheKey.startsWith(`${id}:`)) previewCache.delete(cacheKey);
+        }
+      }
+
+      async function loadProcessedPreview(fileData, effectKey, options = {}) {
+        const maxWidth = options.maxWidth || 760;
+        const maxHeight = options.maxHeight || 1000;
+        const rotation = getTotalRotation(fileData);
+        const cacheKey = `${fileData.id}:${effectKey}:${rotation}:${maxWidth}x${maxHeight}:${options.preview ? "preview" : "export"}`;
+        let processedData = previewCache.get(cacheKey);
+
+        if (!processedData) {
+          processedData = await processImageWithEffect(fileData.url, effectKey, {
+            maxWidth,
+            maxHeight,
+            preview: options.preview ?? true,
+            rotation,
+          });
+          previewCache.set(cacheKey, processedData);
+        }
+
+        return processedData;
+      }
+
+      function handleFiles(files) {
+        const allFiles = Array.from(files || []);
+        const newFiles = allFiles.filter((file) => file.type.startsWith("image/"));
+        const rejectedCount = allFiles.length - newFiles.length;
+=======
+      const effectsMap = {
+  original:      "none",
+  docs:          "grayscale(1) contrast(2.5) brightness(1.3)",
+  enhance:       "contrast(1.8) brightness(1.25) saturate(1.1)",
+  "enhance-pro": "contrast(2.2) brightness(1.35) saturate(1.15)",
+  image:         "contrast(1.6) brightness(1.2) saturate(1.5)",
+  super:         "contrast(1.6) brightness(1.15) saturate(2.5)",
+  bw:            "grayscale(1) contrast(2) brightness(1.2)",
+  "bw-pro":      "grayscale(1) contrast(3.5) brightness(1.25)",
+  gray:          "grayscale(1) contrast(1.8) brightness(1.2)",
+  invert:        "invert(100%) contrast(1.8) brightness(1.1)",
+};
+
+      function handleFiles(files) {
+        const newFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+
+        newFiles.forEach((file) => {
+          const id = createId();
+          const url = URL.createObjectURL(file);
+<<<<<<< HEAD
+          selectedFiles.push({ id, file, url, effect: "global", baseRotation: 0, straightenAngle: 0 });
+          renderSingleImage(id, url, file.name, "global");
+=======
+          // Added rotation: 0 state
+          selectedFiles.push({ id, file, url, effect: "global", rotation: 0 });
+          renderSingleImage(id, url, file.name, 0);
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+        });
+
+        updateUIContext();
+        fileInput.value = "";
+
+        if (newFiles.length > 0) {
+          showToast(
+            `${newFiles.length} image${newFiles.length > 1 ? "s" : ""} added. Clean Scan is active.`,
+            "success",
+          );
+        }
+        if (rejectedCount > 0) {
+          showToast(
+            `${rejectedCount} unsupported file${rejectedCount > 1 ? "s were" : " was"} skipped.`,
+            "error",
+          );
+        }
+      }
+
+<<<<<<< HEAD
+      globalFxSelect.addEventListener("change", (event) => {
+        currentGlobalEffect = event.target.value;
+        document.documentElement.style.setProperty(
+          "--global-filter",
+          effectsMap[currentGlobalEffect] || "none",
+        );
+        refreshAllPreviewEffects();
+        showToast(
+          `${effectProfiles[currentGlobalEffect]?.label || "Effect"} applied. Preview and PDF will match.`,
+          "success",
+        );
+=======
+      globalFxSelect.addEventListener("change", (e) => {
+        currentGlobalEffect = e.target.value;
+        document.documentElement.style.setProperty("--global-filter", effectsMap[currentGlobalEffect]);
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+      });
+
+      sortBtn.addEventListener("click", () => {
+        selectedFiles.sort((a, b) => a.file.name.localeCompare(b.file.name, undefined, { numeric: true, sensitivity: "base" }));
+        reRenderAllPreviews();
+        showToast("Images sorted by file name.", "success");
+      });
+
+      function handleIndividualFxChange(id, effectValue) {
+<<<<<<< HEAD
+        const fileIndex = selectedFiles.findIndex((fileData) => fileData.id === id);
+        if (fileIndex < 0) return;
+
+        selectedFiles[fileIndex].effect = effectValue;
+        applyPreviewEffect(id, effectValue);
+      }
+
+      function refreshAllPreviewEffects() {
+        selectedFiles.forEach((fileData) => {
+          if (fileData.effect === "global") {
+            applyPreviewEffect(fileData.id, "global");
+          }
+        });
+      }
+
+      async function applyPreviewEffect(id, effectValue) {
+        const fileData = getFileDataById(id);
+        const card = imagePreview.querySelector(`[data-id="${id}"]`);
+        const img = card?.querySelector('img[data-type="preview"]');
+        const rotationBadge = card?.querySelector('[data-role="rotation-badge"]');
+        const straightenBadge = card?.querySelector('[data-role="straighten-badge"]');
+        if (!fileData || !card || !img) return;
+
+        const effectiveFx = effectValue === "global" ? currentGlobalEffect : effectValue;
+        const profile = effectProfiles[effectiveFx] || effectProfiles.original;
+        const requestId = String(++previewRequestCounter);
+        img.dataset.previewRequest = requestId;
+        img.src = fileData.url;
+        img.className = "preview-image w-full h-full object-contain";
+        if (rotationBadge) rotationBadge.textContent = `${getDisplayRotation(fileData)}°`;
+        if (straightenBadge) straightenBadge.textContent = `${getStraightenAngle(fileData)}°`;
+
+        card.classList.add("is-processing");
+
+        try {
+          const processed = await loadProcessedPreview(fileData, effectiveFx, {
+            maxWidth: 760,
+            maxHeight: 1000,
+            preview: true,
+          });
+
+          if (img.dataset.previewRequest !== requestId) return;
+          img.src = processed.dataUrl;
+          img.className = "preview-image w-full h-full object-contain";
+        } catch (error) {
+          console.error(`${profile.label} preview failed:`, error);
+          if (img.dataset.previewRequest === requestId) {
+            img.src = fileData.url;
+            img.className = `preview-image w-full h-full object-contain fx-${effectiveFx}`;
+          }
+        } finally {
+          if (img.dataset.previewRequest === requestId) {
+            card.classList.remove("is-processing");
+          }
+          if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+            updatePreviewModal();
+=======
+        const fileIndex = selectedFiles.findIndex((f) => f.id === id);
+        if (fileIndex > -1) {
+          selectedFiles[fileIndex].effect = effectValue;
+          const img = imagePreview.querySelector(`[data-id="${id}"] img[data-type="preview"]`);
+          
+          // Re-apply classes carefully to not remove rotation classes
+          let baseClasses = "w-full h-full object-cover rotate-transition";
+          if (effectValue === "global") {
+            img.className = baseClasses + " fx-global";
+          } else if (effectValue !== "original") {
+            img.className = baseClasses + ` fx-${effectValue}`;
+          } else {
+            img.className = baseClasses;
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+          }
+        }
+      }
+
+<<<<<<< HEAD
+      function renderSingleImage(id, url, fileName, effectValue = "global") {
+        const safeFileName = escapeHtml(fileName);
+        const fileData = getFileDataById(id);
+        const rotation = fileData ? getDisplayRotation(fileData) : 0;
+        const straighten = fileData ? getStraightenAngle(fileData) : 0;
+        const card = document.createElement("article");
+        card.className = "preview-card group rounded-xl overflow-hidden flex flex-col drag-handle cursor-move";
+        card.dataset.id = id;
+
+        card.innerHTML = `
+          <div class="preview-image-wrap relative aspect-[3/4] overflow-hidden bg-white">
+            <button type="button" onclick="openPreviewModal('${id}')" class="absolute inset-0 z-[1]" aria-label="Open large preview for ${safeFileName}"></button>
+            <img src="${url}" data-id="${id}" data-type="preview" class="preview-image w-full h-full object-contain fx-global relative z-0" alt="Preview of ${safeFileName}">
+
+            <div class="serial-number absolute top-2 left-2 text-xs font-black px-2.5 py-1 rounded-lg z-10"></div>
+
+            <button type="button" onclick="removeImage('${id}')" class="remove-btn absolute top-2 right-2 rounded-full p-1.5 z-10" aria-label="Remove ${safeFileName}">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+
+            <div class="rotation-chip absolute top-12 left-2 text-[10px] font-black px-2 py-1 rounded-md z-10" data-role="rotation-badge">${rotation}°</div>
+            <div class="absolute top-12 right-2 text-[10px] font-black px-2 py-1 rounded-md z-10 bg-amber-50 text-amber-900 border border-amber-200" data-role="straighten-badge">${straighten}°</div>
+
+            <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-950/28 to-transparent pointer-events-none z-[1]"></div>
+            <div class="drag-cue absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-md px-2 py-1 text-[9px] font-black uppercase tracking-wide shadow-sm z-10">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+              </svg>
+              Drag
+            </div>
+          </div>
+
+          <div class="p-2.5 flex-grow flex flex-col justify-between gap-2 bg-white border-t border-slate-200 relative z-10">
+            <p class="filename text-[11px] font-bold truncate leading-tight" title="${safeFileName}">${safeFileName}</p>
+
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" onclick="openPreviewModal('${id}')" class="preview-toolbar-btn" aria-label="Open large preview for ${safeFileName}">Preview</button>
+              <button type="button" onclick="rotateImage('${id}', -90)" class="preview-toolbar-btn" aria-label="Rotate ${safeFileName} left">↺ Left</button>
+              <button type="button" onclick="rotateImage('${id}', 90)" class="preview-toolbar-btn" aria-label="Rotate ${safeFileName} right">↻ Right</button>
+            </div>
+
+            <button type="button" onclick="openPreviewModal('${id}')" class="preview-toolbar-btn w-full" aria-label="Straighten ${safeFileName}">Straighten / Fix Angle</button>
+
+            <label class="sr-only" for="fx-${id}">Effect for ${safeFileName}</label>
+            <select id="fx-${id}" onchange="handleIndividualFxChange('${id}', this.value)" class="individual-fx-select custom-select w-full p-1.5 rounded-lg text-[10px] font-bold">
+              <option value="global">Use Global FX</option>
+              <option value="original">Original</option>
+              <option value="docs">Clean Scan</option>
+              <option value="paper-bw">Pure Paper B&amp;W</option>
+              <option value="enhance">Soft Scan</option>
+              <option value="enhance-pro">Sharp Scan</option>
+              <option value="image">Color Document</option>
+              <option value="super">Faint Writing</option>
+              <option value="bw">Clear Grayscale</option>
+              <option value="bw-pro">High Contrast B&amp;W</option>
+              <option value="gray">Gentle Grayscale</option>
+              <option value="invert">Dark Photo Fix</option>
+            </select>
+          </div>
+        `;
+
+        imagePreview.appendChild(card);
+        card.querySelector(".individual-fx-select").value = effectValue;
+        applyPreviewEffect(id, effectValue);
+      }
+
+      async function updatePreviewModal() {
+        if (!activePreviewId) return;
+        const fileData = getFileDataById(activePreviewId);
+        if (!fileData) {
+          closePreviewModal();
+          return;
+        }
+
+        const effectiveFx = getEffectiveEffect(fileData);
+        const straighten = getStraightenAngle(fileData);
+        modalFileName.textContent = fileData.file.name;
+        modalEffectName.textContent = effectProfiles[effectiveFx]?.label || "Preview";
+        modalRotationLabel.textContent = `Rotation: ${getDisplayRotation(fileData)}°`;
+        modalStraightenValue.textContent = `Straighten: ${straighten > 0 ? `+${straighten}` : straighten}°`;
+        modalStraightenLive.textContent = `${straighten > 0 ? `+${straighten}` : straighten}°`;
+        modalStraightenRange.value = String(straighten);
+        modalPreviewImage.src = fileData.url;
+        modalPreviewImage.alt = `Large preview of ${fileData.file.name}`;
+
+        try {
+          const processed = await loadProcessedPreview(fileData, effectiveFx, {
+            maxWidth: 1600,
+            maxHeight: 2200,
+            preview: true,
+          });
+          if (activePreviewId === fileData.id) {
+            modalPreviewImage.src = processed.dataUrl;
+          }
+        } catch (error) {
+          console.error("Large preview failed:", error);
+          modalPreviewImage.src = fileData.url;
+        }
+      }
+
+      function openPreviewModal(id) {
+        activePreviewId = id;
+        previewModal.classList.remove("hidden");
+        previewModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("overflow-hidden");
+        updatePreviewModal();
+      }
+
+      function closePreviewModal() {
+        previewModal.classList.add("hidden");
+        previewModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("overflow-hidden");
+        activePreviewId = null;
+      }
+
+      function rotateImage(id, delta, showMessage = true) {
+        const fileData = getFileDataById(id);
+        if (!fileData) return;
+
+        fileData.baseRotation = normalizePositiveRotation((fileData.baseRotation || 0) + delta);
+        clearPreviewCacheForId(id);
+        applyPreviewEffect(id, fileData.effect || "global");
+
+        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+          updatePreviewModal();
+        }
+
+        if (showMessage) {
+          showToast(`Image rotated to ${getDisplayRotation(fileData)}°.` , "success");
+        }
+      }
+
+      function setStraightenAngle(id, angle, showMessage = true) {
+        const fileData = getFileDataById(id);
+        if (!fileData) return;
+
+        fileData.straightenAngle = clamp(Math.round(Number(angle) || 0), -45, 45);
+        clearPreviewCacheForId(id);
+        applyPreviewEffect(id, fileData.effect || "global");
+
+        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+          updatePreviewModal();
+        }
+
+        if (showMessage) {
+          const val = getStraightenAngle(fileData);
+          showToast(`Straighten angle set to ${val > 0 ? `+${val}` : val}°.` , "success");
+        }
+      }
+
+      function nudgeStraighten(id, delta, showMessage = true) {
+        const fileData = getFileDataById(id);
+        if (!fileData) return;
+        setStraightenAngle(id, getStraightenAngle(fileData) + delta, showMessage);
+      }
+
+      function resetRotation(id, showMessage = true) {
+        const fileData = getFileDataById(id);
+        if (!fileData) return;
+
+        fileData.baseRotation = 0;
+        fileData.straightenAngle = 0;
+        clearPreviewCacheForId(id);
+        applyPreviewEffect(id, fileData.effect || "global");
+
+        if (activePreviewId === id && !previewModal.classList.contains("hidden")) {
+          updatePreviewModal();
+        }
+
+        if (showMessage) {
+          showToast("Rotation and straighten reset.", "success");
+        }
+      }
+
+      window.openPreviewModal = openPreviewModal;
+      window.closePreviewModal = closePreviewModal;
+      window.rotateImage = rotateImage;
+      window.setStraightenAngle = setStraightenAngle;
+      window.nudgeStraighten = nudgeStraighten;
+      window.resetRotation = resetRotation;
+
+      function syncArrayWithUI() {
+        const currentUIElements = Array.from(imagePreview.children);
+        selectedFiles = currentUIElements
+          .map((item) => selectedFiles.find((fileData) => fileData.id === item.dataset.id))
+          .filter(Boolean);
+=======
+      // Updated Render Function to include Rotate and View buttons
+      function renderSingleImage(id, url, fileName, rotation = 0) {
+        const div = document.createElement("div");
+        div.className = "relative group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition flex flex-col drag-handle cursor-move";
+        div.dataset.id = id;
+
+        // Apply scale slightly if rotated 90 or 270 so it fits in the square better visually
+        let scaleStr = (rotation % 180 !== 0) ? "scale(0.75)" : "scale(1)";
+
+        div.innerHTML = `
+            <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 flex items-center justify-center">
+                <img src="${url}" data-id="${id}" data-type="preview" 
+                     class="w-full h-full object-cover fx-global rotate-transition" 
+                     style="transform: rotate(${rotation}deg) ${scaleStr};" alt="preview">
+                
+                <div class="absolute top-1.5 left-1.5 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded shadow-md serial-number z-10"></div>
+                
+                <div class="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition z-20">
+                    <button onclick="event.stopPropagation(); rotatePreviewImage('${id}', 90)" class="bg-gray-800 bg-opacity-70 text-white rounded p-1.5 hover:bg-blue-600 transition" title="Rotate Right">
+                        <svg class="w-3.5 h-3.5 transform scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                    </button>
+                    <button onclick="event.stopPropagation(); removeImage('${id}')" class="bg-red-500 text-white rounded p-1.5 hover:bg-red-600 transition" title="Remove">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div onclick="openModal('${id}')" class="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition cursor-pointer">
+                    <svg class="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </div>
+            </div>
+            
+            <div class="p-2 flex-grow flex flex-col justify-between bg-white border-t border-gray-100">
+                <p class="text-gray-700 text-[11px] mb-2 truncate break-words leading-tight" title="${fileName}">${fileName}</p>
+                <select onchange="handleIndividualFxChange('${id}', this.value)" class="individual-fx-select w-full p-1 border border-gray-300 rounded text-[10px] bg-gray-50 focus:ring-1 focus:ring-blue-200 outline-none">
+                    <option value="global">Use Global FX</option>
+                    <option value="original">Original</option>
+                    <option value="docs">Docs</option>
+                    <option value="enhance">Enhance</option>
+                    <option value="enhance-pro">Enhance Pro</option>
+                    <option value="image">Image</option>
+                    <option value="super">Super</option>
+                    <option value="bw">B&W</option>
+                    <option value="bw-pro">B&W Pro</option>
+                    <option value="gray">Grayscale</option>
+                    <option value="invert">Invert</option>
+                </select>
+            </div>
+        `;
+        imagePreview.appendChild(div);
+      }
+
+      /* --- MODAL & ROTATION LOGIC START --- */
+
+      function openModal(id) {
+          syncArrayWithUI(); // Ensure array order matches UI before opening modal
+          currentModalIndex = selectedFiles.findIndex(f => f.id === id);
+          if (currentModalIndex === -1) return;
+          
+          updateModalContent();
+          imageModal.classList.remove("hidden");
+          document.body.classList.add("modal-open");
+      }
+
+      function closeModal() {
+          imageModal.classList.add("hidden");
+          document.body.classList.remove("modal-open");
+      }
+
+      function updateModalContent() {
+          const fileData = selectedFiles[currentModalIndex];
+          modalImage.src = fileData.url;
+          modalImage.style.transform = `rotate(${fileData.rotation}deg)`;
+          modalFilename.textContent = `${currentModalIndex + 1} of ${selectedFiles.length} — ${fileData.file.name}`;
+          
+          // Apply current filter to modal image to preview the effect
+          let effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+          let filterString = effectsMap[effectiveFx] || "none";
+          modalImage.style.filter = filterString;
+      }
+
+      function navigateModal(direction) {
+          currentModalIndex += direction;
+          if (currentModalIndex < 0) currentModalIndex = selectedFiles.length - 1;
+          if (currentModalIndex >= selectedFiles.length) currentModalIndex = 0;
+          updateModalContent();
+      }
+
+      function rotateModalImage(deg) {
+          const fileData = selectedFiles[currentModalIndex];
+          fileData.rotation = (fileData.rotation + deg) % 360;
+          if(fileData.rotation < 0) fileData.rotation += 360; // Keep it positive
+          
+          // Update Modal UI
+          modalImage.style.transform = `rotate(${fileData.rotation}deg)`;
+          
+          // Update Preview UI instantly
+          updatePreviewRotationStyle(fileData.id, fileData.rotation);
+      }
+
+      function rotatePreviewImage(id, deg) {
+          const fileData = selectedFiles.find(f => f.id === id);
+          if(fileData) {
+              fileData.rotation = (fileData.rotation + deg) % 360;
+              if(fileData.rotation < 0) fileData.rotation += 360;
+              updatePreviewRotationStyle(id, fileData.rotation);
+          }
+      }
+
+      function updatePreviewRotationStyle(id, rotation) {
+          const img = imagePreview.querySelector(`[data-id="${id}"] img[data-type="preview"]`);
+          if(img) {
+              let scaleStr = (rotation % 180 !== 0) ? "scale(0.75)" : "scale(1)";
+              img.style.transform = `rotate(${rotation}deg) ${scaleStr}`;
+          }
+      }
+
+      // Keyboard support for Modal
+      document.addEventListener('keydown', (e) => {
+          if (!imageModal.classList.contains('hidden')) {
+              if (e.key === 'Escape') closeModal();
+              if (e.key === 'ArrowRight') navigateModal(1);
+              if (e.key === 'ArrowLeft') navigateModal(-1);
+          }
+      });
+
+      /* --- MODAL & ROTATION LOGIC END --- */
+
+      function syncArrayWithUI() {
+        const currentUIElements = Array.from(imagePreview.children);
+        selectedFiles = currentUIElements.map((item) => selectedFiles.find((f) => f.id === item.dataset.id));
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+      }
+
+      function reRenderAllPreviews() {
+        imagePreview.innerHTML = "";
+        selectedFiles.forEach((item) => {
+<<<<<<< HEAD
+          renderSingleImage(item.id, item.url, item.file.name, item.effect);
+=======
+          renderSingleImage(item.id, item.url, item.file.name, item.rotation);
+          if (item.effect !== "global") {
+            const select = imagePreview.querySelector(`[data-id="${item.id}"] .individual-fx-select`);
+            select.value = item.effect;
+            handleIndividualFxChange(item.id, item.effect);
+          }
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+        });
+        updateUIHandles();
+      }
+
+      function removeImage(id) {
+        const index = selectedFiles.findIndex((fileData) => fileData.id === id);
+        if (index < 0) return;
+
+        URL.revokeObjectURL(selectedFiles[index].url);
+        clearPreviewCacheForId(id);
+        selectedFiles.splice(index, 1);
+        imagePreview.querySelector(`[data-id="${id}"]`)?.remove();
+        if (activePreviewId === id) {
+          closePreviewModal();
+        }
+        updateUIContext();
+        showToast("Image removed.");
+      }
+
+      clearBtn.addEventListener("click", () => {
+        selectedFiles.forEach((fileData) => URL.revokeObjectURL(fileData.url));
+        selectedFiles = [];
+        previewCache.clear();
+        imagePreview.innerHTML = "";
+        fileInput.value = "";
+        globalFxSelect.value = "docs";
+        currentGlobalEffect = "docs";
+        document.documentElement.style.setProperty("--global-filter", effectsMap.docs);
+        progressContainer.classList.add("hidden");
+        updateUIContext();
+        showToast("All images cleared.");
+      });
+
+      function updateUIContext() {
+        fileCountText.textContent = selectedFiles.length;
+        const hasFiles = selectedFiles.length > 0;
+        controls.classList.toggle("hidden", !hasFiles);
+        emptyState.classList.toggle("hidden", hasFiles);
+        updateUIHandles();
+      }
+
+      function updateUIHandles() {
+        imagePreview.querySelectorAll(".serial-number").forEach((item, index) => {
+          item.textContent = index + 1;
+        });
+      }
+
+      function setControlsDisabled(disabled) {
+        [generateBtn, clearBtn, sortBtn, globalFxSelect].forEach((element) => {
+          element.disabled = disabled;
+        });
+        imagePreview.querySelectorAll("select, button").forEach((element) => {
+          element.disabled = disabled;
+        });
+        generateBtn.classList.toggle("opacity-70", disabled);
+        generateBtn.classList.toggle("cursor-not-allowed", disabled);
+      }
+
+      generateBtn.addEventListener("click", async () => {
+        if (selectedFiles.length === 0) return;
+
+        syncArrayWithUI();
+        setControlsDisabled(true);
+        generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2" aria-hidden="true">◌</span>Processing...`;
+        progressBar.style.width = "0%";
+        progressText.textContent = "0%";
+        progressContainer.classList.remove("hidden");
+        progressContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+        const { jsPDF } = window.jspdf;
+<<<<<<< HEAD
+=======
+        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", compress: true });
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const pageMargin = 5;
+        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", compress: true });
+        let processedCount = 0;
+
+        try {
+          for (let i = 0; i < selectedFiles.length; i += 1) {
+            const fileData = selectedFiles[i];
+            const effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+
+<<<<<<< HEAD
+            try {
+              const imgData = await processImageWithEffect(fileData.url, effectiveFx, {
+                rotation: getTotalRotation(fileData),
+              });
+              if (processedCount > 0) pdf.addPage();
+=======
+          let effectiveFx = fileData.effect === "global" ? currentGlobalEffect : fileData.effect;
+          let canvasFilterString = effectsMap[effectiveFx] || "none";
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+
+              const usableWidth = pageWidth - pageMargin * 2;
+              const usableHeight = pageHeight - pageMargin * 2;
+              const ratio = Math.min(usableWidth / imgData.width, usableHeight / imgData.height);
+              const finalWidth = imgData.width * ratio;
+              const finalHeight = imgData.height * ratio;
+              const x = (pageWidth - finalWidth) / 2;
+              const y = (pageHeight - finalHeight) / 2;
+
+<<<<<<< HEAD
+              pdf.setFillColor(255, 255, 255);
+              pdf.rect(0, 0, pageWidth, pageHeight, "F");
+              pdf.addImage(
+                imgData.dataUrl,
+                imgData.format,
+                x,
+                y,
+                finalWidth,
+                finalHeight,
+                undefined,
+                imgData.format === "PNG" ? "FAST" : "MEDIUM",
+              );
+              processedCount += 1;
+            } catch (error) {
+              console.error(`Error processing image ${i + 1}:`, error);
+            }
+
+            const percent = Math.round(((i + 1) / selectedFiles.length) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+            await new Promise((resolve) => setTimeout(resolve, 0));
+=======
+          try {
+            // Passing rotation data to canvas processor
+            const imgData = await processImageWithFilterAndRotation(fileData.url, canvasFilterString, fileData.rotation);
+
+            if (i > 0) pdf.addPage();
+
+            const ratio = Math.min(pageWidth / imgData.width, pageHeight / imgData.height);
+            const finalWidth = imgData.width * ratio;
+            const finalHeight = imgData.height * ratio;
+
+            const x = (pageWidth - finalWidth) / 2;
+            const y = (pageHeight - finalHeight) / 2;
+
+            pdf.addImage(imgData.dataUrl, "JPEG", x, y, finalWidth, finalHeight, undefined, "MEDIUM");
+          } catch (error) {
+            console.error(`Error processing image ${i}:`, error);
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+          }
+
+          if (processedCount === 0) {
+            throw new Error("No image could be processed.");
+          }
+
+          pdf.save(
+            `Document_${new Date().toISOString().slice(0, 10)}_${Math.floor(Math.random() * 1000)}.pdf`,
+          );
+          progressBar.style.width = "100%";
+          progressText.textContent = "Done!";
+          showToast(
+            `PDF created with ${processedCount} clear page${processedCount > 1 ? "s" : ""}.`,
+            "success",
+          );
+        } catch (error) {
+          console.error("PDF generation failed:", error);
+          progressText.textContent = "Failed";
+          showToast("PDF generation failed. Please try again.", "error");
+        } finally {
+          setControlsDisabled(false);
+          generateBtn.textContent = "Generate PDF";
+          window.setTimeout(() => progressContainer.classList.add("hidden"), 2800);
+        }
+<<<<<<< HEAD
+      });
+
+      function clampByte(value) {
+        return value < 0 ? 0 : value > 255 ? 255 : value;
+      }
+
+      function createLuminanceArray(pixels, pixelCount) {
+        const luminance = new Uint8Array(pixelCount);
+        for (let i = 0, p = 0; p < pixelCount; i += 4, p += 1) {
+          luminance[p] = Math.round(
+            pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114,
+          );
+        }
+        return luminance;
+      }
+
+      function createIntegralImage(luminance, width, height) {
+        const stride = width + 1;
+        const integral = new Uint32Array(stride * (height + 1));
+
+        for (let y = 1; y <= height; y += 1) {
+          let rowSum = 0;
+          const sourceRow = (y - 1) * width;
+          const targetRow = y * stride;
+          const previousRow = (y - 1) * stride;
+
+          for (let x = 1; x <= width; x += 1) {
+            rowSum += luminance[sourceRow + x - 1];
+            integral[targetRow + x] = integral[previousRow + x] + rowSum;
+          }
+        }
+
+        return { integral, stride };
+      }
+
+      function localMeanAt(integral, stride, width, height, x, y, radius) {
+        const x1 = Math.max(0, x - radius);
+        const y1 = Math.max(0, y - radius);
+        const x2 = Math.min(width - 1, x + radius);
+        const y2 = Math.min(height - 1, y + radius);
+        const top = y1 * stride;
+        const bottom = (y2 + 1) * stride;
+        const sum =
+          integral[bottom + x2 + 1] -
+          integral[top + x2 + 1] -
+          integral[bottom + x1] +
+          integral[top + x1];
+        return sum / ((x2 - x1 + 1) * (y2 - y1 + 1));
+      }
+
+      function pushPaperTowardWhite(value, whiteStart) {
+        if (value <= whiteStart) return value;
+        if (value >= 255) return 255;
+        const span = Math.max(1, 255 - whiteStart);
+        const t = (value - whiteStart) / span;
+        return whiteStart + span * (1 - Math.pow(1 - t, 2.25));
+      }
+
+      function applyCrossSharpen(pixels, width, height, amount) {
+        if (!amount || width < 3 || height < 3) return;
+        const source = new Uint8ClampedArray(pixels);
+
+        for (let y = 1; y < height - 1; y += 1) {
+          for (let x = 1; x < width - 1; x += 1) {
+            const index = (y * width + x) * 4;
+            const left = index - 4;
+            const right = index + 4;
+            const up = index - width * 4;
+            const down = index + width * 4;
+
+            for (let channel = 0; channel < 3; channel += 1) {
+              const center = source[index + channel];
+              const neighbors =
+                source[left + channel] +
+                source[right + channel] +
+                source[up + channel] +
+                source[down + channel];
+              pixels[index + channel] = clampByte(
+                center * (1 + amount * 4) - neighbors * amount,
+              );
+            }
+          }
+        }
+      }
+
+      function removeBinarySpeckles(pixels, width, height) {
+        if (width < 3 || height < 3) return;
+        const source = new Uint8ClampedArray(pixels);
+
+        for (let y = 1; y < height - 1; y += 1) {
+          for (let x = 1; x < width - 1; x += 1) {
+            const index = (y * width + x) * 4;
+            if (source[index] !== 0) continue;
+
+            let blackNeighbors = 0;
+            for (let oy = -1; oy <= 1; oy += 1) {
+              for (let ox = -1; ox <= 1; ox += 1) {
+                if (ox === 0 && oy === 0) continue;
+                const neighborIndex = ((y + oy) * width + x + ox) * 4;
+                if (source[neighborIndex] === 0) blackNeighbors += 1;
+              }
+            }
+
+            if (blackNeighbors === 0) {
+              pixels[index] = 255;
+              pixels[index + 1] = 255;
+              pixels[index + 2] = 255;
+            }
+          }
+        }
+      }
+
+      function applyReadabilityEffect(ctx, width, height, effectKey) {
+        const profile = effectProfiles[effectKey] || effectProfiles.docs;
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const pixels = imageData.data;
+        const pixelCount = width * height;
+        const luminance = createLuminanceArray(pixels, pixelCount);
+        const { integral, stride } = createIntegralImage(luminance, width, height);
+        const radius = Math.max(12, Math.min(54, Math.round(Math.min(width, height) / 34)));
+
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            const pixel = y * width + x;
+            const index = pixel * 4;
+            const originalLuma = luminance[pixel];
+            const localPaper = Math.max(
+              22,
+              localMeanAt(integral, stride, width, height, x, y, radius),
+            );
+
+            /* Local division removes uneven light, page shadows and grey/yellow paper. */
+            const ratio = (originalLuma + 7) / (localPaper + 7);
+            let correctedLuma =
+              profile.targetPaper * Math.pow(Math.max(0.015, ratio), profile.ratioGamma);
+
+            if (profile.binary) {
+              const value = correctedLuma < profile.binaryThreshold ? 0 : 255;
+              pixels[index] = value;
+              pixels[index + 1] = value;
+              pixels[index + 2] = value;
+              pixels[index + 3] = 255;
+              continue;
+            }
+
+            correctedLuma =
+              128 + (correctedLuma - 128) * profile.contrast + (profile.brightness || 0);
+            correctedLuma = pushPaperTowardWhite(correctedLuma, profile.whiteStart);
+
+            if (correctedLuma < 128) {
+              correctedLuma *= profile.blackStrength;
+            }
+            correctedLuma = clampByte(correctedLuma);
+
+            if (profile.grayscale) {
+              pixels[index] = correctedLuma;
+              pixels[index + 1] = correctedLuma;
+              pixels[index + 2] = correctedLuma;
+            } else {
+              const saturation = profile.saturation ?? 1;
+              const safeLuma = Math.max(1, originalLuma);
+              const scale = correctedLuma / safeLuma;
+              const red = originalLuma + (pixels[index] - originalLuma) * saturation;
+              const green = originalLuma + (pixels[index + 1] - originalLuma) * saturation;
+              const blue = originalLuma + (pixels[index + 2] - originalLuma) * saturation;
+
+              pixels[index] = clampByte(red * scale);
+              pixels[index + 1] = clampByte(green * scale);
+              pixels[index + 2] = clampByte(blue * scale);
+            }
+
+            pixels[index + 3] = 255;
+          }
+        }
+
+        if (profile.binary && profile.despeckle) {
+          removeBinarySpeckles(pixels, width, height);
+        } else if (profile.sharpen) {
+          applyCrossSharpen(pixels, width, height, profile.sharpen);
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      function processImageWithEffect(imageUrl, effectKey, options = {}) {
+=======
+
+        pdf.save(`Document_${new Date().toISOString().slice(0, 10)}_${Math.floor(Math.random() * 1000)}.pdf`);
+
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = `Generate PDF`;
+        generateBtn.classList.remove("opacity-70", "cursor-not-allowed");
+        clearBtn.disabled = false;
+        sortBtn.disabled = false;
+        globalFxSelect.disabled = false;
+
+        progressBar.style.width = `100%`;
+        progressText.textContent = `Done!`;
+        setTimeout(() => progressContainer.classList.add("hidden"), 2500);
+      });
+
+      // Updated Function: Now handles both Filter and Real Canvas Rotation
+      function processImageWithFilterAndRotation(imageUrl, filterString, rotation = 0) {
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+
+          img.onload = () => {
+            try {
+              const canvas = document.createElement("canvas");
+              const ctx = canvas.getContext("2d", {
+                willReadFrequently: effectKey !== "original",
+              });
+
+<<<<<<< HEAD
+              if (!ctx) {
+                reject(new Error("Canvas is not supported by this browser."));
+                return;
+              }
+
+              const maxWidth = options.maxWidth || 1800;
+              const maxHeight = options.maxHeight || 2400;
+              const rotation = Number(options.rotation || 0);
+              const radians = (rotation * Math.PI) / 180;
+              let width = img.naturalWidth || img.width;
+              let height = img.naturalHeight || img.height;
+              const scale = Math.min(1, maxWidth / width, maxHeight / height);
+              width = Math.max(1, Math.round(width * scale));
+              height = Math.max(1, Math.round(height * scale));
+
+              const cos = Math.cos(radians);
+              const sin = Math.sin(radians);
+              const rotatedWidth = Math.max(1, Math.ceil(Math.abs(width * cos) + Math.abs(height * sin)));
+              const rotatedHeight = Math.max(1, Math.ceil(Math.abs(width * sin) + Math.abs(height * cos)));
+
+              canvas.width = rotatedWidth;
+              canvas.height = rotatedHeight;
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+              ctx.save();
+              ctx.translate(canvas.width / 2, canvas.height / 2);
+              ctx.rotate(radians);
+              ctx.drawImage(img, -width / 2, -height / 2, width, height);
+              ctx.restore();
+
+              if (effectKey !== "original") {
+                applyReadabilityEffect(ctx, canvas.width, canvas.height, effectKey);
+=======
+            const MAX_WIDTH = 1280;
+            const MAX_HEIGHT = 1600;
+            let imgWidth = img.width;
+            let imgHeight = img.height;
+
+            // Maintain Aspect Ratio for Max Bounds
+            if (imgWidth > imgHeight) {
+              if (imgWidth > MAX_WIDTH) {
+                imgHeight *= MAX_WIDTH / imgWidth;
+                imgWidth = MAX_WIDTH;
+              }
+            } else {
+              if (imgHeight > MAX_HEIGHT) {
+                imgWidth *= MAX_HEIGHT / imgHeight;
+                imgHeight = MAX_HEIGHT;
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+              }
+
+              const usePng = effectKey === "paper-bw";
+              const format = usePng ? "PNG" : "JPEG";
+              const dataUrl = usePng
+                ? canvas.toDataURL("image/png")
+                : canvas.toDataURL("image/jpeg", options.preview ? 0.86 : 0.92);
+
+              resolve({ dataUrl, width: canvas.width, height: canvas.height, format });
+              canvas.width = 0;
+              canvas.height = 0;
+            } catch (error) {
+              reject(error);
+            }
+<<<<<<< HEAD
+=======
+
+            // Adjust Canvas Size based on rotation
+            if (rotation === 90 || rotation === 270) {
+                canvas.width = imgHeight;
+                canvas.height = imgWidth;
+            } else {
+                canvas.width = imgWidth;
+                canvas.height = imgHeight;
+            }
+
+            ctx.save();
+            
+            // Translate to center to rotate around center
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate((rotation * Math.PI) / 180);
+
+            if (filterString && filterString !== "none") {
+              ctx.filter = filterString;
+            }
+
+            // Draw image offset by half width/height so it centers perfectly
+            ctx.drawImage(img, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+            
+            ctx.restore();
+
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+            // Return canvas width/height (which are already swapped if rotated)
+            resolve({ dataUrl, width: canvas.width, height: canvas.height });
+
+            canvas.width = 0;
+            canvas.height = 0;
+>>>>>>> a523457b0c7035ccc8f777b0c0af4e9777a5d782
+          };
+
+          img.onerror = () => reject(new Error("Image could not be loaded."));
+          img.src = imageUrl;
+        });
+      }
+
+    </script>
+  </body>
+</html>
