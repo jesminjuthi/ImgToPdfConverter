@@ -1005,9 +1005,18 @@
         class="progress-panel mt-6 p-4 sm:p-5 rounded-2xl hidden"
         aria-live="polite"
       >
-        <div class="flex justify-between gap-3 mb-2">
+        <div class="flex items-center justify-between gap-3 mb-2">
           <span class="text-sm font-extrabold">Generating PDF...</span>
-          <span class="text-sm font-black" id="progress-text">0%</span>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-black" id="progress-text">0%</span>
+            <button
+              id="cancel-generation-btn"
+              type="button"
+              class="action-btn btn-danger px-3 py-1.5 rounded-lg text-xs font-extrabold"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
         <div class="progress-track w-full rounded-full h-3.5 shadow-inner">
           <div
@@ -1017,6 +1026,7 @@
           ></div>
         </div>
         <p
+          id="progress-description"
           class="text-xs sm:text-sm font-medium text-slate-600 mt-2.5 text-center"
         >
           Removing page shadows, whitening the paper and sharpening the writing.
@@ -1214,6 +1224,12 @@
       const progressContainer = document.getElementById("progress-container");
       const progressBar = document.getElementById("progress-bar");
       const progressText = document.getElementById("progress-text");
+      const progressDescription = document.getElementById(
+        "progress-description",
+      );
+      const cancelGenerationBtn = document.getElementById(
+        "cancel-generation-btn",
+      );
       const toast = document.getElementById("toast");
       const previewModal = document.getElementById("preview-modal");
       const previewModalBackdrop = document.getElementById(
@@ -1258,6 +1274,15 @@
       let dragDepth = 0;
       let previewRequestCounter = 0;
       const previewCache = new Map();
+      const previewPending = new Map();
+      let previewProcessingChain = Promise.resolve();
+      const PREVIEW_CACHE_LIMIT = 16;
+      const PREVIEW_BATCH_SIZE = 24;
+      let previewRenderVersion = 0;
+      let generationCancelled = false;
+      let pdfWorker = null;
+      let pdfWorkerRequestId = 0;
+      const pdfWorkerRequests = new Map();
       let activePreviewId = null;
 
       /*
@@ -1559,53 +1584,127 @@
         }
       }
 
+      function getCachedPreview(cacheKey) {
+        const cached = previewCache.get(cacheKey);
+        if (!cached) return null;
+        previewCache.delete(cacheKey);
+        previewCache.set(cacheKey, cached);
+        return cached;
+      }
+
+      function setCachedPreview(cacheKey, processedData) {
+        previewCache.set(cacheKey, processedData);
+        while (previewCache.size > PREVIEW_CACHE_LIMIT) {
+          previewCache.delete(previewCache.keys().next().value);
+        }
+      }
+
+      function yieldToBrowser() {
+        return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+      }
+
+      function enqueuePreviewProcessing(task) {
+        const result = previewProcessingChain
+          .catch(() => undefined)
+          .then(() => yieldToBrowser())
+          .then(task);
+        previewProcessingChain = result.catch(() => undefined);
+        return result;
+      }
+
       async function loadProcessedPreview(fileData, effectKey, options = {}) {
         const maxWidth = options.maxWidth || 760;
         const maxHeight = options.maxHeight || 1000;
         const rotation = getTotalRotation(fileData);
         const cacheKey = `${fileData.id}:${effectKey}:${rotation}:${maxWidth}x${maxHeight}:${options.preview ? "preview" : "export"}`;
-        let processedData = previewCache.get(cacheKey);
+        let processedData = getCachedPreview(cacheKey);
 
         if (!processedData) {
-          processedData = await processImageWithEffect(
-            fileData.url,
-            effectKey,
-            {
-              maxWidth,
-              maxHeight,
-              preview: options.preview ?? true,
-              rotation,
-            },
-          );
-          previewCache.set(cacheKey, processedData);
+          let pending = previewPending.get(cacheKey);
+          if (!pending) {
+            pending = enqueuePreviewProcessing(() =>
+              processImageWithEffect(fileData.url, effectKey, {
+                maxWidth,
+                maxHeight,
+                preview: options.preview ?? true,
+                rotation,
+              }),
+            ).finally(() => previewPending.delete(cacheKey));
+            previewPending.set(cacheKey, pending);
+          }
+          processedData = await pending;
+          if (options.cache !== false) {
+            setCachedPreview(cacheKey, processedData);
+          }
         }
 
         return processedData;
       }
 
-      function handleFiles(files) {
+      const previewObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const card = entry.target;
+            card.dataset.previewVisible = entry.isIntersecting ? "true" : "false";
+            const fileData = getFileDataById(card.dataset.id);
+            if (fileData) {
+              applyPreviewEffect(fileData.id, fileData.effect || "global");
+            }
+          });
+        },
+        { rootMargin: "300px 0px", threshold: 0.01 },
+      );
+
+      async function renderCardsInBatches(items, renderVersion) {
+        for (let start = 0; start < items.length; start += PREVIEW_BATCH_SIZE) {
+          if (renderVersion !== previewRenderVersion) return;
+          const batch = items.slice(start, start + PREVIEW_BATCH_SIZE);
+          const fragment = document.createDocumentFragment();
+          batch.forEach((item) => {
+            if (!getFileDataById(item.id)) return;
+            renderSingleImage(
+              item.id,
+              item.url,
+              item.file.name,
+              item.effect,
+              fragment,
+            );
+          });
+          imagePreview.appendChild(fragment);
+          updateUIHandles();
+          await yieldToBrowser();
+        }
+      }
+
+      async function handleFiles(files) {
         const allFiles = Array.from(files || []);
         const newFiles = allFiles.filter((file) =>
           file.type.startsWith("image/"),
         );
         const rejectedCount = allFiles.length - newFiles.length;
+        const addedItems = [];
 
         newFiles.forEach((file) => {
           const id = createId();
           const url = URL.createObjectURL(file);
-          selectedFiles.push({
+          const item = {
             id,
             file,
             url,
             effect: "global",
             baseRotation: 0,
             straightenAngle: 0,
-          });
-          renderSingleImage(id, url, file.name, "global");
+          };
+          selectedFiles.push(item);
+          addedItems.push(item);
         });
 
         updateUIContext();
         fileInput.value = "";
+
+        if (addedItems.length > 0) {
+          await renderCardsInBatches(addedItems, previewRenderVersion);
+        }
 
         if (newFiles.length > 0) {
           showToast(
@@ -1634,14 +1733,14 @@
         );
       });
 
-      sortBtn.addEventListener("click", () => {
+      sortBtn.addEventListener("click", async () => {
         selectedFiles.sort((a, b) =>
           a.file.name.localeCompare(b.file.name, undefined, {
             numeric: true,
             sensitivity: "base",
           }),
         );
-        reRenderAllPreviews();
+        await reRenderAllPreviews();
         showToast("Images sorted by file name.", "success");
       });
 
@@ -1656,10 +1755,13 @@
       }
 
       function refreshAllPreviewEffects() {
-        selectedFiles.forEach((fileData) => {
-          if (fileData.effect === "global") {
-            applyPreviewEffect(fileData.id, "global");
-          }
+        imagePreview
+          .querySelectorAll('[data-preview-visible="true"]')
+          .forEach((card) => {
+            const fileData = getFileDataById(card.dataset.id);
+            if (fileData?.effect === "global") {
+              applyPreviewEffect(fileData.id, "global");
+            }
         });
       }
 
@@ -1681,24 +1783,34 @@
         const requestId = String(++previewRequestCounter);
         img.dataset.previewRequest = requestId;
         img.src = fileData.url;
-        img.className = "preview-image w-full h-full object-contain";
+        img.className = `preview-image w-full h-full object-contain ${effectValue === "global" ? "fx-global" : `fx-${effectiveFx}`}`;
+        img.style.setProperty(
+          "--image-rotation",
+          `${getTotalRotation(fileData)}deg`,
+        );
         if (rotationBadge)
           rotationBadge.textContent = `${getDisplayRotation(fileData)}°`;
         if (straightenBadge)
           straightenBadge.textContent = `${getStraightenAngle(fileData)}°`;
 
+        if (card.dataset.previewVisible !== "true") {
+          card.classList.remove("is-processing");
+          return;
+        }
+
         card.classList.add("is-processing");
 
         try {
           const processed = await loadProcessedPreview(fileData, effectiveFx, {
-            maxWidth: 760,
-            maxHeight: 1000,
+            maxWidth: 480,
+            maxHeight: 640,
             preview: true,
           });
 
           if (img.dataset.previewRequest !== requestId) return;
           img.src = processed.dataUrl;
           img.className = "preview-image w-full h-full object-contain";
+          img.style.setProperty("--image-rotation", "0deg");
         } catch (error) {
           console.error(`${profile.label} preview failed:`, error);
           if (img.dataset.previewRequest === requestId) {
@@ -1718,7 +1830,13 @@
         }
       }
 
-      function renderSingleImage(id, url, fileName, effectValue = "global") {
+      function renderSingleImage(
+        id,
+        url,
+        fileName,
+        effectValue = "global",
+        target = imagePreview,
+      ) {
         const safeFileName = escapeHtml(fileName);
         const fileData = getFileDataById(id);
         const rotation = fileData ? getDisplayRotation(fileData) : 0;
@@ -1782,9 +1900,9 @@
           </div>
         `;
 
-        imagePreview.appendChild(card);
+        target.appendChild(card);
         card.querySelector(".individual-fx-select").value = effectValue;
-        applyPreviewEffect(id, effectValue);
+        previewObserver.observe(card);
       }
 
       async function updatePreviewModal() {
@@ -1809,9 +1927,10 @@
 
         try {
           const processed = await loadProcessedPreview(fileData, effectiveFx, {
-            maxWidth: 1600,
-            maxHeight: 2200,
+            maxWidth: 1200,
+            maxHeight: 1700,
             preview: true,
+            cache: false,
           });
           if (activePreviewId === fileData.id) {
             modalPreviewImage.src = processed.dataUrl;
@@ -1930,18 +2049,26 @@
 
       function syncArrayWithUI() {
         const currentUIElements = Array.from(imagePreview.children);
-        selectedFiles = currentUIElements
+        const renderedIds = new Set(
+          currentUIElements.map((item) => item.dataset.id),
+        );
+        const orderedRenderedFiles = currentUIElements
           .map((item) =>
             selectedFiles.find((fileData) => fileData.id === item.dataset.id),
           )
           .filter(Boolean);
+        const notRenderedYet = selectedFiles.filter(
+          (fileData) => !renderedIds.has(fileData.id),
+        );
+        selectedFiles = [...orderedRenderedFiles, ...notRenderedYet];
       }
 
-      function reRenderAllPreviews() {
+      async function reRenderAllPreviews() {
+        previewRenderVersion += 1;
+        const renderVersion = previewRenderVersion;
+        previewObserver.disconnect();
         imagePreview.innerHTML = "";
-        selectedFiles.forEach((item) => {
-          renderSingleImage(item.id, item.url, item.file.name, item.effect);
-        });
+        await renderCardsInBatches(selectedFiles, renderVersion);
         updateUIHandles();
       }
 
@@ -1952,7 +2079,11 @@
         URL.revokeObjectURL(selectedFiles[index].url);
         clearPreviewCacheForId(id);
         selectedFiles.splice(index, 1);
-        imagePreview.querySelector(`[data-id="${id}"]`)?.remove();
+        const card = imagePreview.querySelector(`[data-id="${id}"]`);
+        if (card) {
+          previewObserver.unobserve(card);
+          card.remove();
+        }
         if (activePreviewId === id) {
           closePreviewModal();
         }
@@ -1964,6 +2095,8 @@
         selectedFiles.forEach((fileData) => URL.revokeObjectURL(fileData.url));
         selectedFiles = [];
         previewCache.clear();
+        previewRenderVersion += 1;
+        previewObserver.disconnect();
         imagePreview.innerHTML = "";
         fileInput.value = "";
         globalFxSelect.value = "docs";
@@ -2004,14 +2137,218 @@
         generateBtn.classList.toggle("cursor-not-allowed", disabled);
       }
 
+      function pdfImageWorkerMain() {
+        self.onmessage = async (event) => {
+          const { id, file, effectKey, options } = event.data;
+          let bitmap = null;
+
+          try {
+            try {
+              bitmap = await createImageBitmap(file, {
+                imageOrientation: "from-image",
+              });
+            } catch (_) {
+              bitmap = await createImageBitmap(file);
+            }
+
+            const sourceWidth = bitmap.width;
+            const sourceHeight = bitmap.height;
+            const scale = Math.min(
+              1,
+              options.maxWidth / sourceWidth,
+              options.maxHeight / sourceHeight,
+            );
+            const width = Math.max(1, Math.round(sourceWidth * scale));
+            const height = Math.max(1, Math.round(sourceHeight * scale));
+            const radians = (Number(options.rotation || 0) * Math.PI) / 180;
+            const cos = Math.cos(radians);
+            const sin = Math.sin(radians);
+            const rotatedWidth = Math.max(
+              1,
+              Math.ceil(Math.abs(width * cos) + Math.abs(height * sin)),
+            );
+            const rotatedHeight = Math.max(
+              1,
+              Math.ceil(Math.abs(width * sin) + Math.abs(height * cos)),
+            );
+            const canvas = new OffscreenCanvas(rotatedWidth, rotatedHeight);
+            const ctx = canvas.getContext("2d", {
+              willReadFrequently: effectKey !== "original" && !options.fastMode,
+            });
+
+            if (!ctx) throw new Error("Background canvas is unavailable.");
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, rotatedWidth, rotatedHeight);
+
+            const profile = effectProfiles[effectKey] || effectProfiles.original;
+            const canUseFastFilter =
+              options.fastMode && effectKey !== "original" && "filter" in ctx;
+            if (canUseFastFilter) ctx.filter = profile.css || "none";
+
+            ctx.save();
+            ctx.translate(rotatedWidth / 2, rotatedHeight / 2);
+            ctx.rotate(radians);
+            ctx.drawImage(bitmap, -width / 2, -height / 2, width, height);
+            ctx.restore();
+            if (canUseFastFilter) ctx.filter = "none";
+
+            if (effectKey !== "original" && !canUseFastFilter) {
+              applyReadabilityEffect(
+                ctx,
+                rotatedWidth,
+                rotatedHeight,
+                effectKey,
+              );
+            }
+
+            const blob = await canvas.convertToBlob({
+              type: "image/jpeg",
+              quality: options.quality,
+            });
+            const buffer = await blob.arrayBuffer();
+            bitmap.close();
+            bitmap = null;
+            self.postMessage(
+              {
+                id,
+                ok: true,
+                buffer,
+                width: rotatedWidth,
+                height: rotatedHeight,
+                format: "JPEG",
+              },
+              [buffer],
+            );
+          } catch (error) {
+            if (bitmap) bitmap.close();
+            self.postMessage({
+              id,
+              ok: false,
+              error: error?.message || String(error),
+            });
+          }
+        };
+      }
+
+      function createPdfWorker() {
+        if (
+          typeof Worker === "undefined" ||
+          typeof OffscreenCanvas === "undefined" ||
+          typeof createImageBitmap === "undefined"
+        ) {
+          return null;
+        }
+
+        const workerScript = `
+          const effectProfiles = ${JSON.stringify(effectProfiles)};
+          const clampByte = ${clampByte.toString()};
+          const createLuminanceArray = ${createLuminanceArray.toString()};
+          const createIntegralImage = ${createIntegralImage.toString()};
+          const localMeanAt = ${localMeanAt.toString()};
+          const pushPaperTowardWhite = ${pushPaperTowardWhite.toString()};
+          const applyCrossSharpen = ${applyCrossSharpen.toString()};
+          const removeBinarySpeckles = ${removeBinarySpeckles.toString()};
+          const applyReadabilityEffect = ${applyReadabilityEffect.toString()};
+          (${pdfImageWorkerMain.toString()})();
+        `;
+        const workerUrl = URL.createObjectURL(
+          new Blob([workerScript], { type: "text/javascript" }),
+        );
+        const worker = new Worker(workerUrl);
+        URL.revokeObjectURL(workerUrl);
+
+        worker.onmessage = (event) => {
+          const request = pdfWorkerRequests.get(event.data.id);
+          if (!request) return;
+          pdfWorkerRequests.delete(event.data.id);
+          if (event.data.ok) request.resolve(event.data);
+          else request.reject(new Error(event.data.error));
+        };
+
+        worker.onerror = (event) => {
+          const error = new Error(event.message || "Background processing failed.");
+          pdfWorkerRequests.forEach(({ reject }) => reject(error));
+          pdfWorkerRequests.clear();
+          worker.terminate();
+          if (pdfWorker === worker) pdfWorker = null;
+        };
+
+        return worker;
+      }
+
+      async function processImageForPdf(fileData, effectKey, options) {
+        if (!pdfWorker) pdfWorker = createPdfWorker();
+
+        if (!pdfWorker) {
+          await yieldToBrowser();
+          return processImageWithEffect(fileData.url, effectKey, {
+            maxWidth: options.maxWidth,
+            maxHeight: options.maxHeight,
+            quality: options.quality,
+            rotation: options.rotation,
+          });
+        }
+
+        const id = ++pdfWorkerRequestId;
+        return new Promise((resolve, reject) => {
+          pdfWorkerRequests.set(id, { resolve, reject });
+          pdfWorker.postMessage({
+            id,
+            file: fileData.file,
+            effectKey,
+            options,
+          });
+        });
+      }
+
+      function stopPdfWorker(reason = "PDF generation cancelled.") {
+        if (pdfWorker) {
+          pdfWorker.terminate();
+          pdfWorker = null;
+        }
+        const error = new DOMException(reason, "AbortError");
+        pdfWorkerRequests.forEach(({ reject }) => reject(error));
+        pdfWorkerRequests.clear();
+      }
+
+      cancelGenerationBtn.addEventListener("click", () => {
+        generationCancelled = true;
+        cancelGenerationBtn.disabled = true;
+        progressText.textContent = "Cancelling...";
+        stopPdfWorker();
+      });
+
       generateBtn.addEventListener("click", async () => {
         if (selectedFiles.length === 0) return;
 
         syncArrayWithUI();
+        generationCancelled = false;
+        cancelGenerationBtn.disabled = false;
         setControlsDisabled(true);
         generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2" aria-hidden="true">◌</span>Processing...`;
         progressBar.style.width = "0%";
-        progressText.textContent = "0%";
+        progressText.textContent = `0% · 0/${selectedFiles.length}`;
+        const isLargeBatch = selectedFiles.length >= 80;
+        const exportOptions = {
+          maxWidth:
+            selectedFiles.length >= 400
+              ? 1100
+              : selectedFiles.length >= 150
+                ? 1240
+                : 1600,
+          maxHeight:
+            selectedFiles.length >= 400
+              ? 1556
+              : selectedFiles.length >= 150
+                ? 1754
+                : 2263,
+          quality: selectedFiles.length >= 150 ? 0.78 : 0.84,
+          fastMode: isLargeBatch,
+        };
+        progressDescription.textContent = isLargeBatch
+          ? "Large-batch mode is active. Images are processed in the background with memory-safe settings."
+          : "Removing page shadows, whitening the paper and sharpening the writing.";
         progressContainer.classList.remove("hidden");
         progressContainer.scrollIntoView({
           behavior: "smooth",
@@ -2027,11 +2364,16 @@
           unit: "mm",
           format: "a4",
           compress: true,
+          putOnlyUsedFonts: true,
+          precision: 2,
         });
         let processedCount = 0;
 
         try {
           for (let i = 0; i < selectedFiles.length; i += 1) {
+            if (generationCancelled) {
+              throw new DOMException("PDF generation cancelled.", "AbortError");
+            }
             const fileData = selectedFiles[i];
             const effectiveFx =
               fileData.effect === "global"
@@ -2039,13 +2381,20 @@
                 : fileData.effect;
 
             try {
-              const imgData = await processImageWithEffect(
-                fileData.url,
+              const imgData = await processImageForPdf(
+                fileData,
                 effectiveFx,
                 {
+                  ...exportOptions,
                   rotation: getTotalRotation(fileData),
                 },
               );
+              if (generationCancelled) {
+                throw new DOMException(
+                  "PDF generation cancelled.",
+                  "AbortError",
+                );
+              }
               if (processedCount > 0) pdf.addPage();
 
               const usableWidth = pageWidth - pageMargin * 2;
@@ -2062,30 +2411,37 @@
               pdf.setFillColor(255, 255, 255);
               pdf.rect(0, 0, pageWidth, pageHeight, "F");
               pdf.addImage(
-                imgData.dataUrl,
+                imgData.buffer
+                  ? new Uint8Array(imgData.buffer)
+                  : imgData.dataUrl,
                 imgData.format,
                 x,
                 y,
                 finalWidth,
                 finalHeight,
                 undefined,
-                imgData.format === "PNG" ? "FAST" : "MEDIUM",
+                "FAST",
               );
               processedCount += 1;
             } catch (error) {
+              if (error?.name === "AbortError") throw error;
               console.error(`Error processing image ${i + 1}:`, error);
             }
 
             const percent = Math.round(((i + 1) / selectedFiles.length) * 100);
             progressBar.style.width = `${percent}%`;
-            progressText.textContent = `${percent}%`;
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            progressText.textContent = `${percent}% · ${i + 1}/${selectedFiles.length}`;
+            await yieldToBrowser();
           }
 
           if (processedCount === 0) {
             throw new Error("No image could be processed.");
           }
 
+          progressText.textContent = "Finalizing PDF...";
+          progressDescription.textContent =
+            "All pages are ready. Packaging the final PDF for download.";
+          await yieldToBrowser();
           pdf.save(
             `Document_${new Date().toISOString().slice(0, 10)}_${Math.floor(Math.random() * 1000)}.pdf`,
           );
@@ -2096,11 +2452,22 @@
             "success",
           );
         } catch (error) {
-          console.error("PDF generation failed:", error);
-          progressText.textContent = "Failed";
-          showToast("PDF generation failed. Please try again.", "error");
+          if (error?.name === "AbortError") {
+            progressText.textContent = "Cancelled";
+            showToast("PDF generation cancelled.");
+          } else {
+            console.error("PDF generation failed:", error);
+            progressText.textContent = "Failed";
+            showToast("PDF generation failed. Please try again.", "error");
+          }
         } finally {
+          if (pdfWorker) {
+            pdfWorker.terminate();
+            pdfWorker = null;
+          }
+          pdfWorkerRequests.clear();
           setControlsDisabled(false);
+          cancelGenerationBtn.disabled = false;
           generateBtn.textContent = "Generate PDF";
           window.setTimeout(
             () => progressContainer.classList.add("hidden"),
@@ -2368,7 +2735,10 @@
               const format = usePng ? "PNG" : "JPEG";
               const dataUrl = usePng
                 ? canvas.toDataURL("image/png")
-                : canvas.toDataURL("image/jpeg", options.preview ? 0.86 : 0.92);
+                : canvas.toDataURL(
+                    "image/jpeg",
+                    options.quality ?? (options.preview ? 0.82 : 0.84),
+                  );
 
               resolve({
                 dataUrl,
